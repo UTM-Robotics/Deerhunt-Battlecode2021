@@ -1,8 +1,12 @@
-# Battlecode Deerhunt Game
+# Battlecode Deerhunt 2021 Game
 
 ## What is Battlecode?
 
-Battlecode is a real-time strategy game for which teams will program an AI player to face off against an enemy AI player. The rules of the game vary from year-to-year and teams are able to refine their robots as the tournament goes on. Checkout the [Battlecode](https://battlecode.org/) website for more information. Previous competitions hosted by MIT can be found [here](https://www.youtube.com/channel/UCOrfTSnyimIXfYzI8j_-CTQ).
+[Battlecode](https://battlecode.org/) is an AI competition that uniquely challenges partipants to combine game strategy, programming, and artificial intelligence. Although the game theme and rules change year-to-year, Battlecode remains a turn-based strategy game where 2 teams of virtual robots face off with only 1 team emerging as the winner.
+
+Battlecode is MIT's longest running (20+ years) programming competition. It typically spans about 22 days and partipants can work either alone or on a team. The competition welcomes everyone from beginner programmers to advanced programmers. Participants often incorporate knowledge of artificial intelligence, pathfinding, distributed alogorithms and/or networking communications when developing their player program. Learn something new in those 22 days? No problem! Players are able to test and refine their AIs as the competition goes on.
+
+Previous final competitions hosted by MIT can be found [here](https://www.youtube.com/channel/UCOrfTSnyimIXfYzI8j_-CTQ).
 
 ## Motivation
 
@@ -11,12 +15,12 @@ We want to challenge UTM students to program their own AI robots. The competitio
 ## Requirements
 
 ### Tooling and Access
-- Documentation
-- Game understanding
+- Tech documentation
+- Game manual
 - Record patches
 - Stats, Replay
     - Video
-    - Stats afterwards
+    - Post game stats
 - Standard interfaces
     - Moves
     - Standard objects
