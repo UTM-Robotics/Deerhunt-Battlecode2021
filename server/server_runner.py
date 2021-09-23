@@ -4,6 +4,7 @@ import argparse
 import socket
 import os
 import random
+from sys import platform
 
 from grid_fighters import GridFighters
 from client_connection import ClientConnection
@@ -19,7 +20,14 @@ args = parser.parse_args()
 
 #Creates and connects the socket connection to the clients
 sock = socket.socket()
-host = socket.gethostname()
+host = None
+if platform == "linux" or platform == "linux2":
+    host = socket.gethostname()
+elif platform == "darwin":
+    host = 'localhost'
+elif 'win' in platform:
+    host = socket.gethostname()
+
 sock.bind((host, args.port))
 
 sock.settimeout(7)
