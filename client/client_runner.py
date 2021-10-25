@@ -4,6 +4,7 @@ import argparse
 import socket
 import sys
 from controller import NetworkedController
+from grid_player import GridPlayer
 
 parser = argparse.ArgumentParser()
 parser.add_argument('host', type=str, help='The host to connect to')
@@ -14,7 +15,7 @@ sock = socket.socket()
 sock.connect((args.host, args.port))
 sys.stdout = None
 
-player = DeerhuntPlayer()
+player = GridPlayer()
 
 controller = NetworkedController(sock, player)
 
