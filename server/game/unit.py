@@ -1,13 +1,11 @@
 #TODO: Import from the unit game engine class
 
-#TODO: have an 
-
-def create_unit(unitName, *restInfo):
-  '''
-  Deserializes move, this is the factory used in client_connection.py 
-  '''
-  pass 
-
+class UnitFactory():
+    def createUnit(uid, *restInfo):
+         '''
+         Deserializes unit, this is the factory used to create new units
+         '''
+        pass
 
 class GameUnit(Unit):
   def __init__(self,x,y,UnitType, id):
