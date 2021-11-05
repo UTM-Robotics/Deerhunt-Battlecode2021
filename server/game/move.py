@@ -2,11 +2,12 @@
 
 #HAVE LIST OF MOVES HERE
 
-def create_move(moveName, *restInfo):
-  '''
-  Deserializes move, this is the factory used in client_connection.py 
-  '''
-  pass 
+def class MoveFactory():
+    def createMove(uid:String, *restInfo):
+         '''
+         Deserializes move, this is the factory used in client_connection.py 
+         '''
+         pass
 
 
 class GameMove(Move):
