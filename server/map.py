@@ -1,22 +1,21 @@
+class TileFactory:
+    def __init__(self):
+        raise NotImplementedError
+    ''' Given a TileID, returns a new Tile object'''
+    def createTile(self, tileId): 
+        raise NotImplementedError
 class Map:
     """
-    represents a map, methods include ability to serialize and deserialize. this is the base class.
+    # 2D array of tile objects
+    Represents a map, methods include ability to serialize and deserialize. this is the base class.
     we expect users to build on top of this
     Nested List structure, first nests list is first row elements, second list is second row elements etc.
     Map file is expected to be a string containing the
     """
-    def __init__(self, map_file):
+    def __init__(self, map_file, tileFactory):
         self.map_file = None
-        self.keys = {}
+        self.tileFactory = tileFactory
         self.map = []
-
-    def set_keys(self, keys):
-        """
-        sets the associated letter mapping for tile names in a dictionary format. E.g {S: }
-        :return:
-        Keys: Maybe a Json of key mappings similar to what is in tiles. e.g 'w' = wallTile -> {'w': 'wallTile'}
-        """
-        raise NotImplementedError
 
     def _deserialize(self):
         """
