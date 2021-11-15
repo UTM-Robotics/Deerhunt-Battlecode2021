@@ -2,17 +2,6 @@ import json
 import copy
 from ctypes import c_uint32
 
-from move import GroundMove, StasisMove, AttackMove, MineMove, StunMove
-from units import MELEE_UNIT, WORKER_UNIT
-
-#String constants for all available commands
-CMD_DUPLICATE_WORKER = 'DUPLICATE_W'
-CMD_DUPLICATE_MELEE = 'DUPLICATE_M'
-CMD_ATTACK = 'ATTACK'
-CMD_MINE = 'MINE'
-CMD_STUN = 'STUN'
-
-
 class ClientConnection:
     """
     ClientConnection manages the connection with clients. Sends the required data to 
@@ -47,17 +36,7 @@ class ClientConnection:
     #Create move parses the data retrieved in the response body and returns the appropriate move.
     def create_move(self, id, body):
         try:
-            if body[0] == CMD_DUPLICATE_MELEE:
-                return StasisMove(id, body[1], MELEE_UNIT)
-            if body[0] == CMD_DUPLICATE_WORKER:
-                return StasisMove(id, body[1], WORKER_UNIT)
-            if body[0] == CMD_ATTACK:
-                return AttackMove(id, body[1:])
-            if body[0] == CMD_STUN:
-                return StunMove(id, body[1:])
-            if body[0] == CMD_MINE:
-                return MineMove(id)
-            return GroundMove(id, body)
+            #TODO: use game move factory from game code
         except:
             #Happens if not enough data is send in body.
             return

@@ -8,3 +8,10 @@ class Direction(Enum):
     DOWN = 'DOWN'
     LEFT = 'LEFT'
     RIGHT = 'RIGHT'
+
+
+class Moves(Enum):
+    '''
+    Holds all valid moves a player can make
+    '''
+    pass
