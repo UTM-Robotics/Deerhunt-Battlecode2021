@@ -1,9 +1,13 @@
 class TileFactory:
     def __init__(self):
         raise NotImplementedError
-    ''' Given a TileID, returns a new Tile object'''
-    def createTile(self, tileId): 
+
+    """ Given a TileID, returns a new Tile object"""
+
+    def createTile(self, tileId):
         raise NotImplementedError
+
+
 class Map:
     """
     # 2D array of tile objects
@@ -12,6 +16,7 @@ class Map:
     Nested List structure, first nests list is first row elements, second list is second row elements etc.
     Map file is expected to be a string containing the
     """
+
     def __init__(self, map_file, tileFactory):
         self.map_file = None
         self.tileFactory = tileFactory
@@ -30,9 +35,9 @@ class Map:
             for line in f.readlines():
                 self.map.append([])
                 for char in line:
-                    if char not in self.keys:
-                        print(f"Error: unknown symbol: {char} found in {self.map_file}")
-                    self.map[i].append(char)
+                    tile = self.tileFactory.createTile(char)
+                    print(f"Error: unknown symbol: {char} found in {self.map_file}")
+                    self.map[i].append(tile)
                 i += 1
             f.close()
         print(f"finished deserializing map {self.map_file}")
@@ -46,7 +51,7 @@ class Map:
         if not self.map:
             print("Error: there is no map to serialize")
         # overwrite existing file with write mode, just easier atm. more efficient way likely exists with append/edit.
-        with open(self.map_file, 'w') as f:
+        with open(self.map_file, "w") as f:
             for row in self.map:
                 f.writelines(row)
             f.close()
