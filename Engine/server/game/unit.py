@@ -2,16 +2,19 @@
 
 class UnitFactory():
     def createUnit(uid, *restInfo):
-         '''
-         Deserializes unit, this is the factory used to create new units
-         '''
+        '''
+        Deserializes unit, this is the factory used to create new units
+        '''
         pass
 
-class GameUnit(Unit):
-  def __init__(self,x,y,UnitType, id):
-    super(x,y,UnitType, id)
+class GameUnit:
+  def __init__(self,x,y,unitType, id):
     #Include custom statuses like is_mining, is_stunned etc here
-  
+    self.unit_type = UnitType
+    self.id = id
+    self.x = x
+    self.y = y
+
   def __repr__(self):
     return NotImplemented()
 

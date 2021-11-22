@@ -1,4 +1,4 @@
-class TileFactory:
+    class TileFactory:
     def __init__(self):
         raise NotImplementedError
     ''' Given a TileID, returns a new Tile object'''
