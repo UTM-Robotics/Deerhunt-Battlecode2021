@@ -2,34 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="832afc15-f17d-4bc7-996f-c7c7d7d38933" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Engine/server/EngineCore.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/server/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/server/game/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Merlin/client/client_runner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Merlin/server/maps/server_runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/server/game/unit.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/game/unit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/ClientEngine.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/game/MoveList.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/game/MoveList.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/game/units.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/game/units.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/grid_player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/grid_player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/helper_classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/helper_classes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/move.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/move.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/unit.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/client/unit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/client_connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/client_connection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/game/UnitList.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/game/direction.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/game/direction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/game/grid_fighters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/game/grid_fighters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/game/move.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/game/move.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/game/unit.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/map.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/maps/first.map" beforeDir="false" afterPath="$PROJECT_DIR$/Merlin/server/maps/first.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/move.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/move.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/run.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server_runner.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/tiles.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/units.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/units.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/server/units.py" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/server/units.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +39,7 @@
       <option name="presentableId" value="Default" />
       <updated>1637602247348</updated>
       <workItem from="1637602249079" duration="4616000" />
-      <workItem from="1638156296996" duration="2978000" />
+      <workItem from="1638156296996" duration="3063000" />
     </task>
     <servers />
   </component>
