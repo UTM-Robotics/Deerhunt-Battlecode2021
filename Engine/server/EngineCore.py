@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+
+import argparse
+import socket
+import os
+import random
+from sys import platform
+
+from game import GridFighters
+from client_connection import ClientConnection
+from map import TileFactory, Map
+#from move import MoveFactory
+
+
+class GameEngine:
+    def __init__(self, mapRenderFactory, tileFactory:TileFactory, moveFactory):
+        self.mapRenderFactory = mapRenderFactory
+        self.tileFactory = tileFactory
+        self.moveFactory = moveFactory
+        self.socket = None
+        self.host = None
+        self.totalPlayers = 2
+        self.connections = []
+        self.addresses = []
+        self.verbose = False
+
+    def __launchServer(self, port, timeout=8):
+        ''' Launches the server on the desired port, handling OS descrepencies.
+            
+        '''
+        #Creates and connects the socket connection to the clients
+        sock = socket.socket()
+        host = None
+        if platform == "linux" or platform == "linux2":
+            host = socket.gethostname()
+        elif platform == "darwin":
+            host = 'localhost'
+        elif 'win' in platform:
+            host = socket.gethostname()
+
+        sock.bind((host,))
+
+        sock.settimeout(7)
+        sock.listen(Engine.NUMPLAYERS)
+
+    def __connectNextPlayer(self):
+        print(f'Waiting for client {player}...')
+        conn, addr = self.sock.accept()
+        self.connections.append(conn)
+        self.addresses.append(addr)
+
+        if not self.verbose:
+            self.connections[-1].settimeout(3)
+        p1 = ClientConnection(conn, f'p{player}', args.verbose)
+        print(f'Connected to client {player} at addr1')
+
+    def __loadMap(self):
+        file_name = 'maps/{}'.format(random.choice(os.listdir('maps')))
+        self.map = Map(file_name, self.tileFactory)
+
+    def __runGameLoop(self, map):
+
+        game = GridFighters(p1, p2, open(file_name, 'r'))
+        # TODO: Change end game logic
+        #Ticks the game unit there is a winner or the max_turns is reached
+        turn = 0
+        winner = None
+        print('Game starting...')
+        while turn < self.MAX_TURNS and winner == None:
+            winner = game.tick(self.MAX_TURNS - turn)
+            turn += 1
+        print('Winner:', winner)
+        return winner
+    def start(self, doRender=False, savePath="", maxTurns=200):
+        #Retrieves the port and verbose flag from arguments
+        parser = argparse.ArgumentParser()
+        parser.add_argument('port', type=int, help='The port to listen on')
+        parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
+        args = parser.parse_args()
+        self.verbose = args.verbose
+        self.__launchServer(args.port)
+        for player in range(self.totalPlayers):
+            self.__connectNextPlayer()
+            
+        #Picks a random map from the maps folder and creates the game
+        # TODO: CHANGE MAP LOADING SYSTEM
+        self.__loadMap()
+        self.__runGameLoop()
+        for connection in self.connections:
+            connection.close()
+        self.sock.close()

@@ -2,7 +2,7 @@
 
 #HAVE LIST OF MOVES HERE
 
-def class MoveFactory():
+class MoveFactory:
     def createMove(uid:String, *restInfo):
          '''
          Deserializes move, this is the factory used in client_connection.py 
@@ -53,7 +53,7 @@ class GameMove(Move):
 
 
 #Example subclass
-class AttackMove(GameMove):
+class ExampleAttackMove(GameMove):
   def __init__(self,unit,target):
     super(unit)
     self.target = target 

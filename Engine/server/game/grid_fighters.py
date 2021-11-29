@@ -11,52 +11,48 @@ class GridFighters():
 
     def __init__(self, player_one_connection, player_two_connection, map_file):
         pass
-        # self.next_id = 0
-        # self.currently_duplicating = {}
-        # self.currently_mining = {}
-        # self.currently_stunned = {}
-        # self.all_units = {}
+        self.next_id = 0
+        self.currently_duplicating = {}
+        self.currently_mining = {}
+        self.currently_stunned = {}
+        self.all_units = {}
+        self.p1_conn = player_one_connection
+        self.p2_conn = player_two_connectio
+        self.p1_units = {}
+        self.p2_units = {}
+        self.resources = {
+            self.p1_conn.name: 0,
+            self.p2_conn.name: 0}
+        
+    #     #Creates 2 copies of the map, one reversed of the other
+    #     top = [line.rstrip() for line in map_file]
+    #     bottom = deepcopy(top[:-1])
+    #     bottom.reverse(
+    #     #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
+    #     self.grid = self.build_grid(
+    #         top, self.p1_units, 0) + self.build_grid(bottom, self.p2_units, len(top))
 
-        # self.p1_conn = player_one_connection
-        # self.p2_conn = player_two_connection
+    # #build_grid goes through the given lines and adds the appropriate symbol to the returning grid
+    # def build_grid(self, lines, player, base_y):
+    #     pass
+    #     # return [[self.create_tile_or_unit(lines[y][x], player, x, y, base_y)
+    #     #          for x in range(len(lines[y]))]
+    #     #         for y in range(len(lines))]
 
-        # self.p1_units = {}
-        # self.p2_units = {}
-        # self.resources = {
-        #     self.p1_conn.name: 0,
-        #     self.p2_conn.name: 0
-        # }
+    # #create_tile_or_unit pareses each give tilecode and returns the corrisponding Tile object 
+    # def create_tile_or_unit(self, tile_code, player, x, y, base_y):
+    #     pass
+    #     # if tile_code.lower() == 'x':
+    #     #     return WallTile()
+    #     # elif tile_code.lower() == 'r':
+    #     #     return ResourceTile()
+    #     # elif tile_code.lower() == 'm':
+    #     #     #Creates unit if given symbol is a unit symbol
+    #     #     self.add_unit(player, MeleeUnit(x, y+base_y))
+    #     # elif tile_code.lower() == 'w':
+    #     #     self.add_unit(player, WorkerUnit(x, y+base_y))
 
-        # #Creates 2 copies of the map, one reversed of the other
-        # top = [line.rstrip() for line in map_file]
-        # bottom = deepcopy(top[:-1])
-        # bottom.reverse()
-
-        # #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
-        # self.grid = self.build_grid(
-        #     top, self.p1_units, 0) + self.build_grid(bottom, self.p2_units, len(top))
-
-    #build_grid goes through the given lines and adds the appropriate symbol to the returning grid
-    def build_grid(self, lines, player, base_y):
-        pass
-        # return [[self.create_tile_or_unit(lines[y][x], player, x, y, base_y)
-        #          for x in range(len(lines[y]))]
-        #         for y in range(len(lines))]
-
-    #create_tile_or_unit pareses each give tilecode and returns the corrisponding Tile object 
-    def create_tile_or_unit(self, tile_code, player, x, y, base_y):
-        pass
-        # if tile_code.lower() == 'x':
-        #     return WallTile()
-        # elif tile_code.lower() == 'r':
-        #     return ResourceTile()
-        # elif tile_code.lower() == 'm':
-        #     #Creates unit if given symbol is a unit symbol
-        #     self.add_unit(player, MeleeUnit(x, y+base_y))
-        # elif tile_code.lower() == 'w':
-        #     self.add_unit(player, WorkerUnit(x, y+base_y))
-
-        return GroundTile()
+    #     return GroundTile()
 
     #add_unit gives the unit a id and adds the unit to the games state
     def add_unit(self, player, unit):
