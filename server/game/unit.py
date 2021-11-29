@@ -8,12 +8,24 @@ class UnitFactory():
         pass
 
 class GameUnit(Unit):
-  def __init__(self,x,y,UnitType, id):
+  def __init__(self,x,y,UnitType, id, health, speed):
+    self.health = health
+    self.speed = speed
+    self.has_flag = False
     super(x,y,UnitType, id)
     #Include custom statuses like is_mining, is_stunned etc here
   
   def __repr__(self):
-    return NotImplemented()
+      return NotImplemented()
+
+  def attack():
+      return NotImplemented()
+
+  def can_move(direction):
+      return NotImplemented()
+
+  def can_hit(direction):
+      return NotImplemented()
 
 #EXAMPLE
 MELEE_UNIT = 1
@@ -100,3 +112,23 @@ class WorkerUnit(GameUnit):
         self.stasis_direction = direction
         self.duplication_unit = unit_type
         return self
+
+class ScoutUnit(GameUnit):
+
+    def __init__(self,x,y,UnitType, id):
+        super(x,y,UnitType, id, 60, 1.3)
+
+    def capture():
+        self.has_flag = True
+
+class KnightUnit(MeleeUnit):
+
+    def __init__(self,x,y,UnitType, id):
+        super(x,y,UnitType, id, 130, 0.7)
+
+class ArcherUnit(MeleeUnit):
+
+    def __init__(self,x,y,UnitType, id):
+        super(x,y,UnitType, id, 100, 1)
+
+

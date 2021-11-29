@@ -2,7 +2,7 @@ class Unit:
     """
     Units are given to players and can interact with the map
     """
-    def __init__(self, x, y):
+    def __init__(self, x, y, health, speed):
         self.x = x
         self.y = y
         self.id = -1
@@ -21,3 +21,13 @@ class Unit:
 
     def __repr__(self):
         return NotImplemented()
+
+    def attack():
+        return NotImplemented()
+
+    def can_move(direction):
+        return NotImplemented()
+
+    def can_hit(direction):
+        return NotImplemented()
+
