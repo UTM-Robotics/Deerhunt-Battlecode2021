@@ -1,5 +1,5 @@
 #Figure out import
-
+from server import *
 #HAVE LIST OF MOVES HERE
 
 class MoveFactory:

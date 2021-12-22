@@ -36,6 +36,7 @@ class ClientConnection:
     #Create move parses the data retrieved in the response body and returns the appropriate move.
     def create_move(self, id, body):
         try:
+            pass
             #TODO: use game move factory from game code
         except:
             #Happens if not enough data is send in body.

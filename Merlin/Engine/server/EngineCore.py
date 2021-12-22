@@ -6,11 +6,10 @@ import os
 import random
 from sys import platform
 
-from game import GridFighters
-from client_connection import ClientConnection
-from map import TileFactory, Map
-#from move import MoveFactory
-
+from server import *
+from .game.grid_fighters import GridFighters
+from .client_connection import ClientConnection
+from .maps import TileFactory, Map
 
 class GameEngine:
     def __init__(self, mapRenderFactory, tileFactory:TileFactory, moveFactory):
@@ -19,14 +18,14 @@ class GameEngine:
         self.moveFactory = moveFactory
         self.socket = None
         self.host = None
-        self.totalPlayers = 2
+        self.totalPlayers = 0
+        self.NUMPLAYERS = 2
         self.connections = []
         self.addresses = []
         self.verbose = False
 
     def __launchServer(self, port, timeout=8):
         ''' Launches the server on the desired port, handling OS descrepencies.
-            
         '''
         #Creates and connects the socket connection to the clients
         sock = socket.socket()
@@ -38,10 +37,10 @@ class GameEngine:
         elif 'win' in platform:
             host = socket.gethostname()
 
-        sock.bind((host,))
+        sock.bind((host,port))
 
         sock.settimeout(7)
-        sock.listen(Engine.NUMPLAYERS)
+        sock.listen(self.NUMPLAYERS)
 
     def __connectNextPlayer(self):
         print(f'Waiting for client {player}...')
@@ -53,13 +52,13 @@ class GameEngine:
             self.connections[-1].settimeout(3)
         p1 = ClientConnection(conn, f'p{player}', args.verbose)
         print(f'Connected to client {player} at addr1')
+        self.totalPlayers += 1
 
     def __loadMap(self):
         file_name = 'maps/{}'.format(random.choice(os.listdir('maps')))
         self.map = Map(file_name, self.tileFactory)
 
     def __runGameLoop(self, map):
-
         game = GridFighters(p1, p2, open(file_name, 'r'))
         # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
@@ -71,6 +70,7 @@ class GameEngine:
             turn += 1
         print('Winner:', winner)
         return winner
+
     def start(self, doRender=False, savePath="", maxTurns=200):
         #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
