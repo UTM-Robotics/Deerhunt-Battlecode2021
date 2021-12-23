@@ -1,23 +1,23 @@
 import json
-from units import Unit, MeleeUnit, WorkerUnit, MELEE_UNIT, WORKER_UNIT
-from move import GroundMove, StasisMove, AttackMove, Move, MineMove, StunMove
-from tiles import GroundTile, WallTile, ResourceTile
-from copy import deepcopy
+from server import *
+# from ..units import Unit, MeleeUnit, WorkerUnit, MELEE_UNIT, WORKER_UNIT
+# from ..move import GroundMove, StasisMove, AttackMove, Move, MineMove, StunMove
+# from tiles import GroundTile, WallTile, ResourceTile
+# from copy import deepcopy
 
 class GridFighters():
     """
     GridFighters is the currently running game, it controls all game state and updates the state each turn with tick.
     """
 
-    def __init__(self, player_one_connection, player_two_connection, map_file):
-        pass
+    def __init__(self, player_one_connection, player_two_connection, map):
         self.next_id = 0
         self.currently_duplicating = {}
         self.currently_mining = {}
         self.currently_stunned = {}
         self.all_units = {}
         self.p1_conn = player_one_connection
-        self.p2_conn = player_two_connectio
+        self.p2_conn = player_two_connection
         self.p1_units = {}
         self.p2_units = {}
         self.resources = {

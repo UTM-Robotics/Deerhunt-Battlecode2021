@@ -1,5 +1,6 @@
-#TODO: Import from the unit game engine class
-
+from server import *
+from enum import Enum
+from .unit import Unit
 units = {'Worker': 1, 'Scout': 2, 'Knight': 3, 'Archer': 4}
 
 class Units(Enum):
@@ -12,20 +13,20 @@ class UnitFactory():
 
     id_count = 0
 
-    def createUnit(uid, *restInfo):
+    def createUnit(self,uid, *restInfo):
         '''
         Deserializes unit, this is the factory used to create new units
         '''
 
         unit = None
         if uid == Units.WORKER:
-            unit = WorkerUnit(*restInfo, id_count)
+            unit = WorkerUnit(*restInfo, self.id_count)
         elif uid == Units.SCOUT:
-            unit = ScoutUnit(*restInfo, id_count)
+            unit = ScoutUnit(*restInfo, self.id_count)
         elif uid == Units.KNIGHT:
-            unit = KnightUnit(*restInfo, id_count)
+            unit = KnightUnit(*restInfo, self.id_count)
         elif uid == Units.ARCHER:
-            unit = ArcherUnit(*restInfo, id_count)
+            unit = ArcherUnit(*restInfo, self.id_count)
         else:
             return None
 
@@ -37,7 +38,7 @@ class GameUnit(Unit):
     self.health = health
     self.speed = speed
     self.has_flag = False
-    super(x,y,UnitType, id)
+    super().__init__(x,y,UnitType, id)
     #Include custom statuses like is_mining, is_stunned etc here
     self.unit_type = UnitType
     self.id = id
@@ -59,7 +60,7 @@ class GameUnit(Unit):
 class WorkerUnit(GameUnit):
 
     def __init__(self, x, y, id):
-        super(x, y, Unit.WORKER, id, 100, 1)
+        super().__init__(x, y, Unit.WORKER, id, 100, 1)
 
     def __repr__(self):
         return "Worker"
@@ -76,7 +77,7 @@ class WorkerUnit(GameUnit):
 class ScoutUnit(GameUnit):
 
     def __init__(self, x, y, id):
-        super(x, y, Unit.SCOUT, id, 60, 1.3)
+        super().__init__(x, y, Unit.SCOUT, id, 60, 1.3)
 
     def __repr__(self):
         return "Scout"
@@ -96,7 +97,7 @@ class ScoutUnit(GameUnit):
 class KnightUnit(MeleeUnit):
 
     def __init__(self, x, y, id):
-        super(x, y, Unit.KNIGHT, id, 130, 0.7)
+        super().__init__(x, y, Unit.KNIGHT, id, 130, 0.7)
 
     def __repr__(self):
         return "Knight"
@@ -113,7 +114,7 @@ class KnightUnit(MeleeUnit):
 class ArcherUnit(MeleeUnit):
 
     def __init__(self, x, y, id):
-        super(x,y, Unit.ARCHER, id, 100, 1)
+        super().__init__(x,y, Unit.ARCHER, id, 100, 1)
 
 
     def __repr__(self):

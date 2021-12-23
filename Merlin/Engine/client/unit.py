@@ -11,13 +11,13 @@ class Unit:
         self.y = attr['y']
         self.id = attr['id']
 
-    def position(self) -> (int, int):
+    def position(self):
         """
         Returns the current position of this Unit.
         """
         return self.x, self.y
 
-    def direction_to(self, pos: (int, int)) -> str:
+    def direction_to(self, pos):
         """
         Returns a required direction from a unit to <pos>.
         """
@@ -36,14 +36,14 @@ class Unit:
         """
         return Move(self.id, *directions)
 
-    def move_towards(self, dest: (int, int)) -> Move:
+    def move_towards(self, dest):
         """
         Return a Move for this Unit towards <dest>.
         """
         direction = self.direction_to(dest)
         return Move(self.id, direction)
 
-    def nearby_enemies_by_distance(self, enemy_units: 'Units') -> [(str, int)]:
+    def nearby_enemies_by_distance(self, enemy_units: 'Units'):
         """
         Returns a sorted list of ids and their distances (in a tuple).
         """

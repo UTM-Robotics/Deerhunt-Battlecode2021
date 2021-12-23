@@ -1,4 +1,4 @@
-    class TileFactory:
+class TileFactory:
     def __init__(self):
         raise NotImplementedError
     ''' Given a TileID, returns a new Tile object'''
@@ -17,7 +17,7 @@ class Map:
         self.tileFactory = tileFactory
         self.map = []
 
-    def _deserialize(self):
+    def deserialize(self):
         """
         deserializes the map object from the human readable .map file to its state in the game.
         :return:
@@ -37,11 +37,11 @@ class Map:
             f.close()
         print(f"finished deserializing map {self.map_file}")
 
-    def _serialize(self):
+    def serialize(self):
         """
         serializes the current state of the map object into a .map human-readable text file representation.
         Essentially converting The tiles to letters or symbols in the map file.
-        :return:
+        :return string
         """
         if not self.map:
             print("Error: there is no map to serialize")
