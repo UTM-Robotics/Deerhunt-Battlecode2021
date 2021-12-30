@@ -36,7 +36,8 @@ class GameEngine:
             host = 'localhost'
         elif 'win' in platform:
             host = socket.gethostname()
-
+        else:
+            print(f"The platform {platform} is not natively suppported and there may be errors")
         sock.bind((host,port))
 
         sock.settimeout(7)
@@ -85,7 +86,7 @@ class GameEngine:
         #Picks a random map from the maps folder and creates the game
         # TODO: CHANGE MAP LOADING SYSTEM
         self.__loadMap()
-        self.__runGameLoop()
+        self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.close()
         self.sock.close()
