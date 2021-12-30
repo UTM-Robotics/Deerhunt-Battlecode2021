@@ -1,13 +1,44 @@
 from server import *
+from enum import Enum
+from .unit import Unit
+units = {'Worker': 1, 'Scout': 2, 'Knight': 3, 'Archer': 4}
+
+class Units(Enum):
+    WORKER = 1
+    SCOUT = 2
+    KNIGHT = 3
+    ARCHER = 4
+
 class UnitFactory():
-    def createUnit(uid, *restInfo):
+
+    id_count = 0
+
+    def createUnit(self,uid, *restInfo):
         '''
         Deserializes unit, this is the factory used to create new units
         '''
-        pass
 
-class GameUnit:
-  def __init__(self,x,y,unitType, id):
+        unit = None
+        if uid == Units.WORKER:
+            unit = WorkerUnit(*restInfo, self.id_count)
+        elif uid == Units.SCOUT:
+            unit = ScoutUnit(*restInfo, self.id_count)
+        elif uid == Units.KNIGHT:
+            unit = KnightUnit(*restInfo, self.id_count)
+        elif uid == Units.ARCHER:
+            unit = ArcherUnit(*restInfo, self.id_count)
+        else:
+            return None
+
+        return unit
+
+
+class GameUnit(Unit):
+  def __init__(self,x,y,UnitType, id, health, speed):
+    self.health = health
+    self.speed = speed
+    self.has_flag = False
+    super().__init__(x,y,UnitType, id)
     #Include custom statuses like is_mining, is_stunned etc here
     self.unit_type = UnitType
     self.id = id
@@ -15,90 +46,87 @@ class GameUnit:
     self.y = y
 
   def __repr__(self):
-    return NotImplemented()
+      return NotImplemented()
 
-#EXAMPLE
-MELEE_UNIT = 1
-WORKER_UNIT = 1
-STUN_COST = 2
-WORKER_COST = 3
-MELEE_COST = 5
-class MeleeUnit(GameUnit):
-    def __init__(self, x, y, id):
-        self.type = MELEE_UNIT
-        self.stun_cost = STUN_COST
+  def attack():
+      return NotImplemented()
 
-        super().__init__(x, y,MELEE_UNIT,id)
+  def can_move(direction):
+      return NotImplemented()
 
-    def string(self):
-        if self.is_stunned():
-            return '"s"'
-        return '"m"'
-
-    def __repr__(self):
-        if self.is_stunned():
-            return "s"
-        return 'm'
-
-    def is_mining(self):
-        return False
-
-    def is_duplicating(self):
-        return False
-
-    def can_stun(self, resources):
-        if resources >= STUN_COST:
-            return True
-        return False
-
+  def can_hit(direction):
+      return NotImplemented()
 
 class WorkerUnit(GameUnit):
+
     def __init__(self, x, y, id):
-        self.type = WORKER_UNIT
-        self.mining_time = 5
-        self.mining_status = 0
-
-        self.duplication_status = 0
-        self.stasis_direction = None
-        self.duplication_time = 4
-        self.duplication_unit = None
-
-        self.melee_cost = MELEE_COST
-        self.worker_cost = WORKER_COST
-
-        super().__init__(x, y)
-
-    def string(self):
-        if self.is_stunned():
-            return '"s"'
-        return '"w"'
+        super().__init__(x, y, Unit.WORKER, id, 100, 1)
 
     def __repr__(self):
-        if self.is_stunned():
-            return "s"
-        return 'w'
+        return "Worker"
 
-    def can_mine(self) -> bool:
-        return self.mining_status <= 0
+    def attack():
+        pass
 
-    def is_mining(self) -> bool:
-        return self.mining_status > 0
+    def can_move():
+        pass
 
-    def start_mining(self):
-        self.mining_status = self.mining_time
-        return self
+    def can_hit(direction):
+        pass
 
-    def can_duplicate(self, resouces: int, unit_type: str) -> bool:
-        if (unit_type == MELEE_UNIT and resouces >= self.melee_cost) or \
-                (unit_type == WORKER_UNIT and resouces >= self.worker_cost):
-            return self.duplication_status <= 0
-        return False
+class ScoutUnit(GameUnit):
 
-    def is_duplicating(self) -> bool:
-        return self.duplication_status > 0
+    def __init__(self, x, y, id):
+        super().__init__(x, y, Unit.SCOUT, id, 60, 1.3)
 
-    def start_duplication(self, direction: str, unit_type: str):
-        self.duplication_status = self.duplication_time
-        self.stasis_direction = direction
-        self.duplication_unit = unit_type
-        return self
+    def __repr__(self):
+        return "Scout"
+
+    def attack():
+        pass
+
+    def can_move():
+        pass
+
+    def can_hit(direction):
+        pass
+
+    def capture():
+        self.has_flag = True
+
+class KnightUnit(MeleeUnit):
+
+    def __init__(self, x, y, id):
+        super().__init__(x, y, Unit.KNIGHT, id, 130, 0.7)
+
+    def __repr__(self):
+        return "Knight"
+
+    def attack():
+        pass
+
+    def can_move():
+        pass
+
+    def can_hit(direction):
+        pass
+
+class ArcherUnit(MeleeUnit):
+
+    def __init__(self, x, y, id):
+        super().__init__(x,y, Unit.ARCHER, id, 100, 1)
+
+
+    def __repr__(self):
+        return "Archer"
+
+    def attack():
+        pass
+
+    def can_move():
+        pass
+
+    def can_hit(direction):
+        pass
+
+
