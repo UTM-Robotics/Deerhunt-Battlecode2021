@@ -2,6 +2,9 @@ import json
 import copy
 from ctypes import c_uint32
 
+from server.move import MoveFactory
+
+moveFactory = MoveFactory()
 class ClientConnection:
     """
     ClientConnection manages the connection with clients. Sends the required data to 
@@ -36,8 +39,7 @@ class ClientConnection:
     #Create move parses the data retrieved in the response body and returns the appropriate move.
     def create_move(self, id, body):
         try:
-            pass
-            #TODO: use game move factory from game code
+            return moveFactory.createMove(id, body)
         except:
             #Happens if not enough data is send in body.
             return
