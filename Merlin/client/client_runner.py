@@ -1,5 +1,3 @@
-import ..Engine.
-
 class MerlinClientLauncher:
     @staticmethod
     def start():

@@ -1,16 +1,10 @@
 #Figure out import
 
-from enum import Enum
 from server import Units
 
 from Engine.server.move import Move
-class Moves(Enum):
-    ATTACK = 1
-    UPGRADE = 2
-    DIRECTION = 3
-    MINE = 4
-    BUY = 5
-    CAPTURE = 6
+
+from game.constants import Moves, Units
 
 # 0 represents cost to buy, anything above represents cost to upgrade
 UPGRADE_COSTS = {
