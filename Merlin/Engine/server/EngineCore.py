@@ -16,7 +16,7 @@ class GameEngine:
         self.mapRenderFactory = mapRenderFactory
         self.tileFactory = tileFactory
         self.moveFactory = moveFactory
-        self.socket = None
+        self.sock = None
         self.host = None
         self.totalPlayers = 0
         self.NUMPLAYERS = 2
@@ -42,8 +42,10 @@ class GameEngine:
 
         sock.settimeout(7)
         sock.listen(self.NUMPLAYERS)
+        self.sock = sock
 
     def __connectNextPlayer(self):
+        player = self.totalPlayers + 1
         print(f'Waiting for client {player}...')
         conn, addr = self.sock.accept()
         self.connections.append(conn)
@@ -51,7 +53,7 @@ class GameEngine:
 
         if not self.verbose:
             self.connections[-1].settimeout(3)
-        p1 = ClientConnection(conn, f'p{player}', args.verbose)
+        p1 = ClientConnection(conn, f'p{player}', self.verbose)
         print(f'Connected to client {player} at addr1')
         self.totalPlayers += 1
 
@@ -60,7 +62,7 @@ class GameEngine:
         self.map = Map(file_name, self.tileFactory)
 
     def __runGameLoop(self, map):
-        game = GridFighters(p1, p2, open(file_name, 'r'))
+        game = GridFighters(*self.connections, map)
         # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0
@@ -80,7 +82,7 @@ class GameEngine:
         args = parser.parse_args()
         self.verbose = args.verbose
         self.__launchServer(args.port)
-        for player in range(self.totalPlayers):
+        for player in range(self.NUMPLAYERS):
             self.__connectNextPlayer()
             
         #Picks a random map from the maps folder and creates the game
