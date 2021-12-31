@@ -1,11 +1,7 @@
 from server import *
-from enum import Enum
 from Engine.server.units import Unit
-class Units(Enum):
-    WORKER = 1
-    SCOUT = 2
-    KNIGHT = 3
-    ARCHER = 4
+
+from game.constants import Units
 
 class UnitFactory():
 

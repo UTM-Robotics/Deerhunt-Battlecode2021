@@ -80,7 +80,7 @@ class UpgradeMove(GameMove):
   def __init__(self, unit):
       super().__init__(unit)
   
-  def serialize(self):
+  def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
@@ -100,7 +100,7 @@ class DirectionMove(GameMove):
       super().__init__(unit)
       self.direction = direction
   
-  def serialize(self):
+  def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
@@ -120,7 +120,7 @@ class MineMove(GameMove):
   def __init__(self, unit):
       super().__init__(unit)
   
-  def serialize(self):
+  def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
@@ -141,7 +141,7 @@ class BuyMove(GameMove):
       super().__init__(None)
       self.unitType = unitType
   
-  def serialize(self):
+  def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
@@ -161,7 +161,7 @@ class CaptureMove(GameMove):
       super().__init__(unit)
       self.direction = direction
   
-  def serialize(self):
+  def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
