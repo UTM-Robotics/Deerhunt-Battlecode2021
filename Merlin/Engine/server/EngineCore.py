@@ -48,13 +48,12 @@ class GameEngine:
         player = self.totalPlayers + 1
         print(f'Waiting for client {player}...')
         conn, addr = self.sock.accept()
-        self.connections.append(conn)
+        self.connections.append(ClientConnection(conn, f'p{player}', verbose=self.verbose,moveFactory=self.moveFactory))
         self.addresses.append(addr)
 
         if not self.verbose:
-            self.connections[-1].settimeout(3)
-        p1 = ClientConnection(conn, f'p{player}', self.verbose)
-        print(f'Connected to client {player} at addr1')
+            self.connections[-1].conn.settimeout(3)
+        print(f'Connected to client {player} at addr')
         self.totalPlayers += 1
 
     def __loadMap(self):

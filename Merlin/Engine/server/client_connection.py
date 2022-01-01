@@ -2,17 +2,21 @@ import json
 import copy
 from ctypes import c_uint32
 
+from server.move import MoveFactory
+
+moveFactory = MoveFactory()
 class ClientConnection:
     """
     ClientConnection manages the connection with clients. Sends the required data to 
     the socket as well as parsing the data received.
     """
 
-    def __init__(self, socket, player_name, verbose=False):
+    def __init__(self, socket, player_name, verbose=False, moveFactory=moveFactory):
         self.sock = socket
         self.name = player_name
         self.verbose = verbose
         self.vision_range = 4
+        self.moveFactory = moveFactory
 
     #print_map prints a new copy of the map with the new state and waits for user input to continue. Shown if app is verbose.
     def print_map(self, state, game):
@@ -36,8 +40,7 @@ class ClientConnection:
     #Create move parses the data retrieved in the response body and returns the appropriate move.
     def create_move(self, id, body):
         try:
-            pass
-            #TODO: use game move factory from game code
+            return self.moveFactory.createMove(id, body)
         except:
             #Happens if not enough data is send in body.
             return
