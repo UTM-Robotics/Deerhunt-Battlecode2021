@@ -2,20 +2,20 @@ import json
 import copy
 from ctypes import c_uint32
 
-from server.move import MoveFactory
 
-moveFactory = MoveFactory()
 class ClientConnection:
     """
     ClientConnection manages the connection with clients. Sends the required data to 
     the socket as well as parsing the data received.
     """
 
-    def __init__(self, socket, player_name, verbose=False, moveFactory=moveFactory):
+    def __init__(self, socket, player_name, verbose=False, moveFactory=None):
         self.sock = socket
         self.name = player_name
         self.verbose = verbose
         self.vision_range = 4
+        if moveFactory is None:
+            raise Exception("Must implement move factory.")
         self.moveFactory = moveFactory
 
     #print_map prints a new copy of the map with the new state and waits for user input to continue. Shown if app is verbose.

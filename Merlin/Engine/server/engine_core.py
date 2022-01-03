@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import argparse
 import socket
@@ -7,7 +6,7 @@ import random
 from sys import platform
 
 from server import *
-from .game.grid_fighters import GridFighters
+from .grid_game import GridGame
 from .client_connection import ClientConnection
 from .maps import TileFactory, Map
 
@@ -58,10 +57,11 @@ class GameEngine:
 
     def __loadMap(self):
         file_name = 'maps/{}'.format(random.choice(os.listdir('maps')))
+        print("Loading Map:", file_name)
         self.map = Map(file_name, self.tileFactory)
 
     def __runGameLoop(self, map):
-        game = GridFighters(*self.connections, map)
+        game = GridGame(*self.connections, map)
         # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0
@@ -80,13 +80,14 @@ class GameEngine:
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
         args = parser.parse_args()
         self.verbose = args.verbose
+        self.__loadMap()
         self.__launchServer(args.port)
         for player in range(self.NUMPLAYERS):
             self.__connectNextPlayer()
             
         #Picks a random map from the maps folder and creates the game
         # TODO: CHANGE MAP LOADING SYSTEM
-        self.__loadMap()
+
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.close()

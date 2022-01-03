@@ -1,9 +1,4 @@
-class TileFactory:
-    def __init__(self):
-        raise NotImplementedError
-    ''' Given a TileID, returns a new Tile object'''
-    def createTile(self, tileId): 
-        raise NotImplementedError
+from .tile import TileFactory, IllegalTileException
 class Map:
     """
     # 2D array of tile objects
@@ -30,9 +25,10 @@ class Map:
             for line in f.readlines():
                 self.map.append([])
                 for char in line:
-                    if char not in self.keys:
-                        print(f"Error: unknown symbol: {char} found in {self.map_file}")
-                    self.map[i].append(char)
+                    tile = self.tileFactory.createTile(char)
+                    if not tile:
+                        raise IllegalTileException(f"Error: unknown symbol: {char} found in {self.map_file}")
+                    self.map[i].append(tile)
                 i += 1
             f.close()
         print(f"finished deserializing map {self.map_file}")
