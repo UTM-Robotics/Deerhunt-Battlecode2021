@@ -4,6 +4,8 @@ import socket
 import os
 import random
 from sys import platform
+from Engine.server.renderer import RenderingEngine
+from Engine.server import renderer
 
 from server import *
 from .grid_game import GridGame
@@ -11,8 +13,8 @@ from .client_connection import ClientConnection
 from .maps import TileFactory, Map
 
 class GameEngine:
-    def __init__(self, mapRenderFactory, tileFactory:TileFactory, moveFactory):
-        self.mapRenderFactory = mapRenderFactory
+    def __init__(self, renderFactory, tileFactory:TileFactory, moveFactory):
+        self.mapRenderFactory = renderFactory
         self.tileFactory = tileFactory
         self.moveFactory = moveFactory
         self.sock = None
@@ -22,6 +24,7 @@ class GameEngine:
         self.connections = []
         self.addresses = []
         self.verbose = False
+        self.render = False
 
     def __launchServer(self, port, timeout=8):
         ''' Launches the server on the desired port, handling OS descrepencies.
@@ -56,6 +59,8 @@ class GameEngine:
         self.totalPlayers += 1
 
     def __loadMap(self):
+        #Picks a random map from the maps folder and creates the game
+        # TODO: CHANGE MAP LOADING SYSTEM
         file_name = 'maps/{}'.format(random.choice(os.listdir('maps')))
         print("Loading Map:", file_name)
         self.map = Map(file_name, self.tileFactory)
@@ -69,6 +74,12 @@ class GameEngine:
         print('Game starting...')
         while turn < self.MAX_TURNS and winner == None:
             winner = game.tick(self.MAX_TURNS - turn)
+            game_map, units, misc = game.get_state()
+            if self.does_render:
+                self.renderEngine.update(game_map, units, misc)
+                self.renderEngine.draw()
+            if self.verbose:
+                print(game.get_state)
             turn += 1
         print('Winner:', winner)
         return winner
@@ -82,14 +93,15 @@ class GameEngine:
 
         args = parser.parse_args()
         self.verbose = args.verbose
+        self.does_render = args.render
+        
         self.__loadMap()
+        
         self.__launchServer(args.port)
         for player in range(self.NUMPLAYERS):
             self.__connectNextPlayer()
-            
-        #Picks a random map from the maps folder and creates the game
-        # TODO: CHANGE MAP LOADING SYSTEM
-
+        if self.does_render:
+            self.renderEngine = RenderingEngine(self.mapRenderFactory)
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.close()

@@ -34,3 +34,7 @@ class RenderingEngine:
             self.screen.blit(tile[0], tile[1])
 
         pygame.display.update()
+
+class BaseRenderFactory:
+    def get_tile_image(self, tile):
+        raise NotImplementedError

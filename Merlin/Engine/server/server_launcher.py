@@ -17,7 +17,10 @@ class ServerLauncher:
 
     def start(self):
         tileFactory = self.getTileFactory()
-        mapRenderFactory = self.getMapRenderFactory()
+        renderFactory = self.getMapRenderFactory()
         moveFactory = self.getMoveFactory()
-        engine = GameEngine(tileFactory= tileFactory, mapRenderFactory=mapRenderFactory, moveFactory=moveFactory)
+        engine = GameEngine(tileFactory= tileFactory,
+            renderFactory=renderFactory,
+            moveFactory=moveFactory
+            )
         engine.start()
