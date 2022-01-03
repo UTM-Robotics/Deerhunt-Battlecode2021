@@ -78,6 +78,8 @@ class GameEngine:
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
+        parser.add_argument('--render', help='Should display the game turn by turn', action='store_true')
+
         args = parser.parse_args()
         self.verbose = args.verbose
         self.__loadMap()

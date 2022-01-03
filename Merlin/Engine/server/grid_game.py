@@ -21,35 +21,18 @@ class GridGame():
             self.p1_conn.name: 0,
             self.p2_conn.name: 0}
         
-    #     #Creates 2 copies of the map, one reversed of the other
-    #     top = [line.rstrip() for line in map_file]
-    #     bottom = deepcopy(top[:-1])
-    #     bottom.reverse(
-    #     #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
-    #     self.grid = self.build_grid(
-    #         top, self.p1_units, 0) + self.build_grid(bottom, self.p2_units, len(top))
+        #Creates 2 copies of the map, one reversed of the other
+        top = map
+        bottom = deepcopy(top[:-1])
+        bottom.reverse()
+        #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
+        self.grid = top + bottom
 
-    # #build_grid goes through the given lines and adds the appropriate symbol to the returning grid
-    # def build_grid(self, lines, player, base_y):
-    #     pass
-    #     # return [[self.create_tile_or_unit(lines[y][x], player, x, y, base_y)
-    #     #          for x in range(len(lines[y]))]
-    #     #         for y in range(len(lines))]
-
-    # #create_tile_or_unit pareses each give tilecode and returns the corrisponding Tile object 
-    # def create_tile_or_unit(self, tile_code, player, x, y, base_y):
-    #     pass
-    #     # if tile_code.lower() == 'x':
-    #     #     return WallTile()
-    #     # elif tile_code.lower() == 'r':
-    #     #     return ResourceTile()
-    #     # elif tile_code.lower() == 'm':
-    #     #     #Creates unit if given symbol is a unit symbol
-    #     #     self.add_unit(player, MeleeUnit(x, y+base_y))
-    #     # elif tile_code.lower() == 'w':
-    #     #     self.add_unit(player, WorkerUnit(x, y+base_y))
-
-    #     return GroundTile()
+    # build_grid goes through the given lines and adds the appropriate symbol to the returning grid
+    def build_grid(self, lines, player, base_y):
+        return [[self.create_tile_or_unit(lines[y][x], player, x, y, base_y)
+                 for x in range(len(lines[y]))]
+                for y in range(len(lines))]
 
     #add_unit gives the unit a id and adds the unit to the games state
     def add_unit(self, player, unit):
@@ -74,7 +57,7 @@ class GridGame():
         # del self.all_units['{},{}'.format(x, y)]
 
     def verify_move(self, k, v, player_state, player_resources, enemy_units, moved_units):
-        pass
+        # pass
         # if k not in player_state:
         #     print('ERROR: Cannot move enemy unit: {}'.format(k))
         #     return False
@@ -188,50 +171,28 @@ class GridGame():
         #     if self.verify_move(k, v, current, self.resources[name], opponent, moved_units):
         #         self.make_move(k, v, current, name, opponent)
 
-    #can_duplicate_to checks if the tile the unit is trying to duplicate to is a ground tile
-    def can_duplicate_to(self, unit):
-        pass
-        # dir = unit.stasis_direction
-        # x = unit.x
-        # y = unit.y
-        # x, y = Move.transform(x, y, dir)
-        # if isinstance(self.grid[y][x], GroundTile) and not '{},{}'.format(x,y) in self.all_units:
-        #     return True
-
-        # return False
-
-    #create_duplicate creates the duplicate unit depending on the type selected for duplication
-    def create_duplicate(self, unit):
-        pass
-        # if unit.duplication_unit == MELEE_UNIT:
-        #     return MeleeUnit(*Move.transform(unit.x, unit.y, unit.stasis_direction))
-        # else:
-        #     return WorkerUnit(*Move.transform(unit.x, unit.y, unit.stasis_direction))
-
     def json_str(self):
         pass
-        # display = deepcopy(self.grid)
-        # for u in self.p1_units.values():
-        #     display[u.y][u.x] = u
-        # for u in self.p2_units.values():
-        #     display[u.y][u.x] = u.string().upper()
+        display = deepcopy(self.grid)
+        for u in self.p1_units.values():
+            display[u.y][u.x] = u
+        for u in self.p2_units.values():
+            display[u.y][u.x] = u.string().upper()
 
-        # def inner(r): return '[{}]'.format(
-        #     ','.join(map(lambda x: (x if isinstance(x, str) else x.string()), r)))
-        # return '[{}]'.format(','.join(map(inner, display)))
+        def inner(r): return '[{}]'.format(
+            ','.join(map(lambda x: (x if isinstance(x, str) else x.string()), r)))
+        return '[{}]'.format(','.join(map(inner, display)))
 
     def print_map(self, p1_name, p2_name):
-        pass
-        # j = json.dumps({
-        #     'map': self.json_str(),
-        #     'p1_resources': self.resources[p1_name],
-        #     'p2_resources': self.resources[p2_name]
-        # })
-        # print('MAP:{}'.format(j))
+        j = json.dumps({
+            'map': self.json_str(),
+            'p1_resources': self.resources[p1_name],
+            'p2_resources': self.resources[p2_name]
+        })
+        print('MAP:{}'.format(j))
 
     #tick is run each turn and updates the game state
     def tick(self, turns):
-        pass
         #Checks if any units are duplicating, if they are increment the status and create a new unit if they are complete
         # for k, (player, unit) in list(self.currently_duplicating.items()):
         #     unit.duplication_status -= 1
@@ -253,17 +214,17 @@ class GridGame():
         #     if unit.stun_status == 0:
         #         del self.currently_stunned[k]
 
-        # #Gets the moves from each player and executes.
-        # self.tick_player(self.p1_conn, self.p1_units,
-        #                  self.p2_units, self.p1_conn.name, turns)
-        # self.print_map(self.p1_conn.name, self.p2_conn.name)
+        #Gets the moves from each player and executes.
+        self.tick_player(self.p1_conn, self.p1_units,
+                         self.p2_units, self.p1_conn.name, turns)
+        self.print_map(self.p1_conn.name, self.p2_conn.name)
 
-        # if len(self.p2_units) == 0:
-        #     return self.p1_conn.name
+        if len(self.p2_units) == 0:
+            return self.p1_conn.name
 
-        # self.tick_player(self.p2_conn, self.p2_units,
-        #                  self.p1_units, self.p2_conn.name, turns)
-        # self.print_map(self.p1_conn.name, self.p2_conn.name)
+        self.tick_player(self.p2_conn, self.p2_units,
+                         self.p1_units, self.p2_conn.name, turns)
+        self.print_map(self.p1_conn.name, self.p2_conn.name)
 
-        # if len(self.p1_units) == 0:
-        #     return self.p2_conn.name
+        if len(self.p1_units) == 0:
+            return self.p2_conn.name

@@ -7,6 +7,7 @@ class Map:
     Nested List structure, first nests list is first row elements, second list is second row elements etc.
     Map file is expected to be a string containing the
     """
+
     def __init__(self, map_file, tileFactory):
         self.map_file = None
         self.tileFactory = tileFactory
@@ -42,7 +43,7 @@ class Map:
         if not self.map:
             print("Error: there is no map to serialize")
         # overwrite existing file with write mode, just easier atm. more efficient way likely exists with append/edit.
-        with open(self.map_file, 'w') as f:
+        with open(self.map_file, "w") as f:
             for row in self.map:
                 f.writelines(row)
             f.close()
