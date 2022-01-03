@@ -1,7 +1,5 @@
 import json
-from helper_classes import Map, Units
 from move import Move
-from grid_player import GridPlayer
 from socket import socket
 
 
@@ -10,14 +8,16 @@ class SocketClosed(Exception):
 
 
 class Controller:
-    def tick(self, connection: socket, player: GridPlayer):
+    def tick(self, connection: socket, player):
         raise NotImplementedError('Should have implemented this')
 
 
 class NetworkedController(Controller):
-    def __init__(self, connection: socket, player: GridPlayer):
+    def __init__(self, connection: socket, player, encodeDataFactory, decodeDataFactory):
         self.conn = connection
         self.player = player
+        self.encodeDataFactory = encodeDataFactory
+        self.decodeDataFactory = decodeDataFactory
 
     def safe_recv(self, size: int) -> bytes:
         tmp = self.conn.recv(size)
@@ -31,17 +31,9 @@ class NetworkedController(Controller):
             response = self.safe_recv(size).decode()
 
             js = json.loads(response)
-            moves = self.player.tick(Map(js['map']),
-                                     Units(js['my_units']),
-                                     Units(js['their_units']),
-                                     js['my_resources'],
-                                     js['turns_left'])
-            data = []
-            for move in moves:
-                if isinstance(move, Move):
-                    data.append(move.to_tuple())
-                else:
-                    print('Expected type Move but got {}'.format(type(move)))
+            parsedData = self.decodeDataFactory.decode(js)
+            moves = self.player.tick(**parsedData)
+            data = self.encodeDataFactory.encode(moves)
 
             body = json.dumps(data).encode()
 
