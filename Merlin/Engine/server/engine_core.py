@@ -73,11 +73,11 @@ class GameEngine:
         turn = 0
         winner = None
         print('Game starting...')
-        while turn < self.MAX_TURNS and winner == None:
+        while turn < self.MAX_TURNS and winner == None: # TODO: Raise notimplementedError
             winner = game.tick(self.MAX_TURNS - turn)
-            game_map, units, misc = game.get_state()
+            current_map, current_units, current_misc = game.get_state()
             if self.does_render:
-                self.renderEngine.update(game_map, units, misc)
+                self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
             if self.verbose:
                 print(game.get_state)
@@ -89,13 +89,18 @@ class GameEngine:
         #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
+        parser.add_argument('--logpath', type=str, help='The port to listen on', nargs='?', const=None)
+        parser.add_argument('--winnerpath', type=str, help='The port to listen on', nargs='?', const=None)
+
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
         parser.add_argument('--render', help='Should display the game turn by turn', action='store_true')
 
         args = parser.parse_args()
         self.verbose = args.verbose
         self.does_render = args.render
-        
+        self.save_path = args.savepath
+        # TODO: implement save_path feature - Should serialize all contents directly to a file at save_path.
+        # TODO: implement a 
         self.__loadMap()
         
         self.__launchServer(args.port)
