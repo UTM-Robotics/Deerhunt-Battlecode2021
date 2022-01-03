@@ -3,7 +3,7 @@ from Engine.server.server_launcher import ServerLauncher
 from .render import MerlinRenderFactory
 from .move import MerlinMoveFactory
 from .tile import MerlinTileFactory
-
+from .grid_game import MerlinGridGameFactory
 class MerlinServerLauncher(ServerLauncher):
     '''
         A launch system for the Merlin game.
@@ -17,3 +17,6 @@ class MerlinServerLauncher(ServerLauncher):
 
     def getMapRenderFactory(self):
         return MerlinRenderFactory()
+
+    def getGame(self):
+        return MerlinGridGameFactory()

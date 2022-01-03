@@ -6,12 +6,13 @@ class RenderingEngine:
         self.tile_list = []
         self.tile_size = 20
         self.factory = factory
-        self.screen = pygame.display.set_mode((720, 720))
-        pygame.display.set_caption("Merlin.io")
+        self.screen = pygame.display.set_mode((820, 720))
+        pygame.display.set_caption("Merlin.io") # TODO this should be passed in as well
 
-    def update(self, tile_list, units):
+    def update(self, tile_list, units, miscellaneous):
         self.units = units
         self.tile_list = tile_list
+        self.miscellaneous = miscellaneous
 
     def draw(self):
         row_count = 0
@@ -32,7 +33,9 @@ class RenderingEngine:
 
         for tile in self.tile_list:
             self.screen.blit(tile[0], tile[1])
+        # TODO render units
 
+        # TODO render miscellaneous
         pygame.display.update()
 
 class BaseRenderFactory:

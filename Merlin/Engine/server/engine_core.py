@@ -13,10 +13,11 @@ from .client_connection import ClientConnection
 from .maps import TileFactory, Map
 
 class GameEngine:
-    def __init__(self, renderFactory, tileFactory:TileFactory, moveFactory):
-        self.mapRenderFactory = renderFactory
+    def __init__(self, renderFactory, tileFactory:TileFactory, moveFactory, gameFactory):
+        self.renderFactory = renderFactory
         self.tileFactory = tileFactory
         self.moveFactory = moveFactory
+        self.gameFactory = gameFactory
         self.sock = None
         self.host = None
         self.totalPlayers = 0
@@ -66,7 +67,7 @@ class GameEngine:
         self.map = Map(file_name, self.tileFactory)
 
     def __runGameLoop(self, map):
-        game = GridGame(*self.connections, map)
+        game = self.gameFactory(self.connections, map)
         # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0

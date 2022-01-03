@@ -2,6 +2,9 @@ import json
 from server import *
 from copy import deepcopy
 
+class GridGameFactory():
+    def getGame(self):
+        raise NotImplementedError
 class GridGame():
     """
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
@@ -19,7 +22,7 @@ class GridGame():
         self.p2_units = {}
         self.resources = {
             self.p1_conn.name: 0,
-            self.p2_conn.name: 0}
+            self.p2_conn.name: 0} #TODO resources must be removed?
         
         #Creates 2 copies of the map, one reversed of the other
         top = map

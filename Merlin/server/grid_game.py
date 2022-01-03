@@ -2,60 +2,16 @@ import json
 from server import *
 from copy import deepcopy
 
-class GridGame():
+from Engine.server.grid_game import GridGame, GridGameFactory
+
+class MerlinGridGameFactory(GridGameFactory):
+    def getGame(connections, map):
+        return MerlinGridGame(*connections, map)
+
+class MerlinGridGame(GridGame):
     """
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
     """
-
-    def __init__(self, player_one_connection, player_two_connection, map):
-        self.next_id = 0
-        self.currently_duplicating = {}
-        self.currently_mining = {}
-        self.currently_stunned = {}
-        self.all_units = {}
-        self.p1_conn = player_one_connection
-        self.p2_conn = player_two_connection
-        self.p1_units = {}
-        self.p2_units = {}
-        self.resources = {
-            self.p1_conn.name: 0,
-            self.p2_conn.name: 0}
-        
-        #Creates 2 copies of the map, one reversed of the other
-        top = map
-        bottom = deepcopy(top[:-1])
-        bottom.reverse()
-        #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
-        self.grid = top + bottom
-        self.current_player_turn = 0
-
-    # build_grid goes through the given lines and adds the appropriate symbol to the returning grid
-    def build_grid(self, lines, player, base_y):
-        return [[self.create_tile_or_unit(lines[y][x], player, x, y, base_y)
-                 for x in range(len(lines[y]))]
-                for y in range(len(lines))]
-
-    #add_unit gives the unit a id and adds the unit to the games state
-    def add_unit(self, player, unit):
-        pass
-        # unit.id = self.next_id
-        # player[str(self.next_id)] = unit
-        # self.next_id += 1
-    
-        self.all_units['{},{}'.format(unit.x, unit.y)] = unit
-
-    def move_unit(self, x, y, unit):
-        pass
-        #del self.all_units['{},{}'.format(x, y)]
-        #self.all_units['{},{}'.format(unit.x, unit.y)] = unit
-
-    def get_unit(self, x, y):
-        pass
-        # return self.all_units['{},{}'.format(x, y)]
-
-    def del_unit(self, x, y):
-        pass
-        # del self.all_units['{},{}'.format(x, y)]
 
     def verify_move(self, k, v, player_state, player_resources, enemy_units, moved_units):
         pass
