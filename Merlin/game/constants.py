@@ -16,6 +16,14 @@ class Units(Enum):
     KNIGHT = 3
     ARCHER = 4
 
+class Tiles(Enum):
+    GROUND = ' ' # A walkable tile
+    WALL = 'X' # A non-walkable tile
+    GOLD = 'G' # A gold resource tile, check manual for worth when mined.
+    SILVER = 'S'# A silver resource tile, check manual for worth ehwn mined.
+    COPPER = 'C' # A copper resource tile, check manual for worth ehwn mined.
+    BASE = 'B' # A team's base
+
 # Direction holds string values for each cardinal direction on the board
 class Direction(Enum):
     UP = 'UP'

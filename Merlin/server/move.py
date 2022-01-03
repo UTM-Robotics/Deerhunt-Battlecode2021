@@ -1,6 +1,6 @@
 #Figure out import
 
-from server import Units
+from .unit import Units
 
 from Engine.server.move import Move
 
@@ -13,8 +13,8 @@ UPGRADE_COSTS = {
   Units.KNIGHT: {},
   Units.ARCHER: {}
 }
-class MoveFactory:
-    def createMove(uid:String, *restInfo):
+class MerlinMoveFactory:
+    def createMove(uid:str, *restInfo):
         '''
         Deserializes move, this is the factory used in client_connection.py 
         '''

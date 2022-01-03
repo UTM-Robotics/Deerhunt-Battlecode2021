@@ -1,2 +1,3 @@
-from server.merlinServer import MerlinServerLauncher 
-MerlinServerLauncher.start()
+from server.merlin_server import MerlinServerLauncher
+
+MerlinServerLauncher().start()
