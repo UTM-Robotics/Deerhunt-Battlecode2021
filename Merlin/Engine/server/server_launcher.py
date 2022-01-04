@@ -15,9 +15,16 @@ class ServerLauncher:
     def getMapRenderFactory(self):
         raise NotImplementedError
 
+    def getGameFactory(self):
+        raise NotImplementedError
+
     def start(self):
         tileFactory = self.getTileFactory()
-        mapRenderFactory = self.getMapRenderFactory()
+        renderFactory = self.getMapRenderFactory()
         moveFactory = self.getMoveFactory()
-        engine = GameEngine(tileFactory= tileFactory, mapRenderFactory=mapRenderFactory, moveFactory=moveFactory)
+        engine = GameEngine(tileFactory= tileFactory,
+            renderFactory=renderFactory,
+            moveFactory=moveFactory,
+            gameFactory=self.getGameFactory()
+            )
         engine.start()
