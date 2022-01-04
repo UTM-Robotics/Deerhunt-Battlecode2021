@@ -4,9 +4,7 @@ from copy import deepcopy
 
 from Engine.server.grid_game import GridGame, GridGameFactory
 
-class MerlinGridGameFactory(GridGameFactory):
-    def getGame(connections, map):
-        return MerlinGridGame(*connections, map)
+
 
 class MerlinGridGame(GridGame):
     """
@@ -116,17 +114,6 @@ class MerlinGridGame(GridGame):
         #     except:
         #         pass
 
-    def tick_player(self, conn, current, opponent, name, turns):
-        pass
-        # #Gets a list of moves from the player
-        # moves = conn.tick(self, current, opponent, self.resources, turns)
-
-        # moved_units = set()
-        # #Goes through each given move and verifies it is valid. If it is execute it.
-        # for m in moves:
-        #     k, v = m
-        #     if self.verify_move(k, v, current, self.resources[name], opponent, moved_units):
-        #         self.make_move(k, v, current, name, opponent)
 
     def json_str(self):
         pass
@@ -151,8 +138,25 @@ class MerlinGridGame(GridGame):
     def get_state(self):
         return self.grid, self.all_units, self.resources
 
+    def getWinner(self):
+        return None
+
+    def tick_player(self, conn, current, opponent, name, turns):
+        pass
+        # #Gets a list of moves from the player
+        # moves = conn.tick(self, current, opponent, self.resources, turns)
+
+        # moved_units = set()
+        # #Goes through each given move and verifies it is valid. If it is execute it.
+        # for m in moves:
+        #     k, v = m
+        #     if self.verify_move(k, v, current, self.resources[name], opponent, moved_units):
+        #         self.make_move(k, v, current, name, opponent)
+
+
     #tick is run each turn and updates the game state
-    def tick(self, turns):
+    def tick(self):
+        turns = 0
         #Checks if any units are duplicating, if they are increment the status and create a new unit if they are complete
         # for k, (player, unit) in list(self.currently_duplicating.items()):
         #     unit.duplication_status -= 1
@@ -188,3 +192,8 @@ class MerlinGridGame(GridGame):
 
         if len(self.p1_units) == 0:
             return self.p2_conn.name
+
+
+class MerlinGridGameFactory(GridGameFactory):
+    def getGame(self, connections, map)->MerlinGridGame:
+        return MerlinGridGame(*connections, map)

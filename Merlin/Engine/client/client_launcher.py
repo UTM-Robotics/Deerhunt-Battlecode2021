@@ -25,4 +25,5 @@ class ClientLauncher:
         decodeDataFactory = self.getDecodeDataFactory()
         player = self.getPlayer()
         engine = ClientEngine(encodeDataFactory= encodeDataFactory, decodeDataFactory=decodeDataFactory, player = player)
+        print("Loaded client engine")
         engine.start()

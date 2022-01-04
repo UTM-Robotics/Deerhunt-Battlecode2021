@@ -25,6 +25,6 @@ class ServerLauncher:
         engine = GameEngine(tileFactory= tileFactory,
             renderFactory=renderFactory,
             moveFactory=moveFactory,
-            gameFactory=self.getGameFactory
+            gameFactory=self.getGameFactory()
             )
         engine.start()

@@ -18,5 +18,5 @@ class MerlinServerLauncher(ServerLauncher):
     def getMapRenderFactory(self):
         return MerlinRenderFactory()
 
-    def getGame(self):
+    def getGameFactory(self):
         return MerlinGridGameFactory()

@@ -1,16 +1,15 @@
 import json
-from server import *
+from typing import List
+from .client_connection import ClientConnection
 from copy import deepcopy
+from .maps import Map
 
-class GridGameFactory():
-    def getGame(self):
-        raise NotImplementedError
 class GridGame():
     """
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
     """
 
-    def __init__(self, player_one_connection, player_two_connection, map):
+    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, map:Map):
         self.next_id = 0
         self.currently_duplicating = {}
         self.currently_mining = {}
@@ -25,13 +24,12 @@ class GridGame():
             self.p2_conn.name: 0} #TODO resources must be removed?
         
         #Creates 2 copies of the map, one reversed of the other
-        top = map
+        top = map.map
         bottom = deepcopy(top[:-1])
         bottom.reverse()
         #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.
         self.grid = top + bottom
         self.current_player_turn = 0
-
 
     #add_unit gives the unit a id and adds the unit to the games state
     def add_unit(self, player, unit):
@@ -81,9 +79,16 @@ class GridGame():
     def make_move(self, k, v, player_state, player_name, opponent_state):
         raise NotImplementedError
 
+    def getWinner(self):
+        raise NotImplementedError("Must define a wincondition")
+
     def tick_player(self, conn, current, opponent, name, turns):
+        raise NotImplementedError("Must define a player's tick")
+
+    #tick is run next turn and updates the game state
+    def tick(self):
         raise NotImplementedError
 
-    #tick is run each turn and updates the game state
-    def tick(self, turns):
+class GridGameFactory():
+    def getGame(self, connections:List[ClientConnection], map:Map)->GridGame:
         raise NotImplementedError
