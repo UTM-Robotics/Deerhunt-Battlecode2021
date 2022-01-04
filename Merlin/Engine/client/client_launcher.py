@@ -1,5 +1,11 @@
 from .engine_core import ClientEngine
+class DecodeDataFactory:
+  def decode(js):
+    return NotImplementedError
 
+class EncodeDataFactory:
+  def encode(moves):
+    return NotImplementedError
 class ClientLauncher:
     '''
         To be extended, acts as a strict guide for how to launch a Battlecode game.
