@@ -1,5 +1,4 @@
 import json
-from move import Move
 from socket import socket
 
 
