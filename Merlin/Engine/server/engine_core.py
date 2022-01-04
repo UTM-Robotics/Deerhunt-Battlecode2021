@@ -90,15 +90,15 @@ class GameEngine:
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
         parser.add_argument('--logpath', type=str, help='The port to listen on', nargs='?', const=None)
-        parser.add_argument('--winnerpath', type=str, help='The port to listen on', nargs='?', const=None)
+        parser.add_argument('--outputpath', type=str, help='The port to listen on', nargs='?', const=None)
 
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
-        parser.add_argument('--render', help='Should display the game turn by turn', action='store_true')
+        parser.add_argument('--render', help='Should render the game\'s images turn by turn', action='store_true')
 
         args = parser.parse_args()
         self.verbose = args.verbose
         self.does_render = args.render
-        self.save_path = args.savepath
+        self.save_path = args.logpath
         # TODO: implement save_path feature - Should serialize all contents directly to a file at save_path.
         # TODO: implement a 
         self.__loadMap()
