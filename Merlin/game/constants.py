@@ -59,6 +59,34 @@ UPGRADE_COSTS = {
     3:40
   }
 }
+ # unittype to 
+ATTACK_DAMAGE = {
+  Units.WORKER: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+    },
+  Units.SCOUT: {
+      0:10,
+      1:50,
+      2:30,
+      3:40
+  },
+  Units.KNIGHT: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+  },
+  Units.ARCHER: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+  }
+}
+
 
 MAX_LEVEL = 3
 
@@ -74,4 +102,6 @@ MINING_REWARDS = {
     Tiles.SILVER: 75,
     Tiles.COPPER: 75
 }
-MINING_TIME = 3 # one of your turns, one of the enemies turns.
+MINING_TIME = 3 # One of your turns, one of the enemies turns.
+
+DUPLICATION_TIME = 3  # One of your turns, one of the enemies turns.

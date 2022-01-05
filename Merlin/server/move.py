@@ -74,7 +74,7 @@ class UpgradeMove(GameMove):
       The subclass should implement this
       '''
 class DirectionMove(GameMove):
-  def __init__(self, unit, direction):
+  def __init__(self, unit, direction, magnitude):
       super().__init__(unit)
       self.direction = direction
   

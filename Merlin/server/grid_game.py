@@ -1,5 +1,5 @@
 import json
-from Merlin.game.constants import MINING_TIME, UPGRADE_COSTS
+from game.constants import ATTACK_DAMAGE, DUPLICATION_TIME, MINING_TIME, UPGRADE_COSTS
 from game.constants import Tiles
 from server import *
 from copy import deepcopy
@@ -171,14 +171,6 @@ class MerlinGridGame(GridGame):
                     return False
         return False
 
-    def get_matching_unit(self, x, y, attack):
-        pass
-        # rx, ry = attack.get_relative_moves()
-
-        # x += rx
-        # y += ry
-
-        # return self.all_units.get('{},{}'.format(x, y), None)
 
     def get_direction_change(self, direction):
         x = 0
@@ -201,25 +193,41 @@ class MerlinGridGame(GridGame):
         y += ry
         return x, y
 
-        # return self.all_units.get('{},{}'.format(x, y), None)
     def make_move(self, k, v, player_state, player_name, opponent_state):
         unit = player_state[k]
         if isinstance(v, DirectionMove):
-            m = v.get_relative_moves()
-            x, y = player_state[k].pos_tuple()
-            player_state[k].set_relative_location(self.all_units, *m)
+            direction = v.direction
+            magnitude = v.magnitude
+            x,y = unit.x, unit.y
+            dx,dy = direction_to_coord(direction)
+            x += dx*magnitude
+            y += dy*magnitude
             self.move_unit(x, y, player_state[k])
-        if isinstance(v, AttackMove):
+            if unit.has_flag():
+                self.setFlag(self.getEnemyFlag(player_name), x, y)
+        elif isinstance(v, AttackMove):
+            attacked_unit = self.get_unit(v.targetX, v.targetY)
+            damage = ATTACK_DAMAGE[unit.unit_type][unit.level]
+            attacked_unit.health -= damage
+            if attacked_unit.health <= 0:
+                self.del_unit(attacked_unit.x, attacked_unit.y)
             
         elif isinstance(v, UpgradeMove):
             self.resources[player_name] -= UPGRADE_COSTS[unit.unit_type][unit.level]
             unit.level += 1
         elif isinstance(v, BuyMove):
-            x,y = v.x, v.y
+            self.resources[player_name] -= UPGRADE_COSTS[v.unitType][0]
+            unit.start_duplication(v.unitType,DUPLICATION_TIME)
         elif isinstance(v, MineMove):
             x,y = unit.x, unit.y
             miningType = self.grid[unit.x][unit.y].id
             v.mining_status = MINING_TIME
+        elif isinstance(v, CaptureMove):
+            direction = v.direction
+            x,y = unit.x, unit.y
+            flag = self.get_enemy_flag(player_name)
+            self.setFlag(flag, x, y)
+            unit.has_flag = True
 
     def json_str(self):
         display = deepcopy(self.grid)
