@@ -36,54 +36,50 @@ class Direction(Enum):
 UPGRADE_COSTS = {
   Units.WORKER: {
     0:10,
-    1:50,
-    2:30,
-    3:40
+    1:10,
+    2:10,
+    3:10
     },
   Units.SCOUT: {
       0:10,
-      1:50,
-      2:30,
-      3:40
+      1:20,
+      2:20,
+      3:20
   },
   Units.KNIGHT: {
     0:10,
-    1:50,
-    2:30,
-    3:40
+    1:20,
+    2:20,
+    3:20
   },
   Units.ARCHER: {
     0:10,
-    1:50,
-    2:30,
-    3:40
+    1:20,
+    2:20,
+    3:20
   }
 }
  # unittype to 
 ATTACK_DAMAGE = {
   Units.WORKER: {
-    0:10,
-    1:50,
-    2:30,
-    3:40
+    1:0,
+    2:0,
+    3:0
     },
   Units.SCOUT: {
-      0:10,
-      1:50,
-      2:30,
-      3:40
+      1:0,
+      2:0,
+      3:0
   },
   Units.KNIGHT: {
-    0:10,
     1:50,
-    2:30,
-    3:40
+    2:80,
+    3:100
   },
   Units.ARCHER: {
-    0:10,
-    1:50,
-    2:30,
-    3:40
+    1:20,
+    2:50,
+    3:80
   }
 }
 
@@ -99,9 +95,9 @@ MAX_ATTACK_RANGE = {
 
 MINING_REWARDS = {
     Tiles.GOLD: 75,
-    Tiles.SILVER: 75,
-    Tiles.COPPER: 75
+    Tiles.SILVER: 50,
+    Tiles.COPPER: 25
 }
-MINING_TIME = 3 # One of your turns, one of the enemies turns.
 
+MINING_TIME = 3 # One of your turns, one of the enemies turns.
 DUPLICATION_TIME = 3  # One of your turns, one of the enemies turns.
