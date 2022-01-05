@@ -11,7 +11,7 @@ class GridGame():
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
     """
 
-    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, map:Map):
+    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, gamemap:Map):
         self.next_id = 0
         self.all_units = {}
         self.p1_conn = player_one_connection
@@ -21,9 +21,8 @@ class GridGame():
         self.resources = {
             self.p1_conn.name: 0,
             self.p2_conn.name: 0} #TODO resources must be removed?
-        
         #Creates 2 copies of the map, one reversed of the other
-        top = map.map
+        top = gamemap.map
         bottom = deepcopy(top[:-1])
         bottom.reverse()
         #Creates the map by combining the top and bottom copies of the map and adding the units to the game state.

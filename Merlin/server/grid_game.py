@@ -21,8 +21,8 @@ class MerlinGridGame(GridGame):
     This game is won by a player capturing the other player's flag
     
     """
-    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, map:Map):
-        super().__init__(player_one_connection, player_two_connection, map)
+    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, gamemap:Map):
+        super().__init__(player_one_connection, player_two_connection, gamemap)
         self.turns = 0
         self.totalTurns = TURNS_PER_PLAYER*2
         self.p1_flag = {}
@@ -170,13 +170,12 @@ class MerlinGridGame(GridGame):
 
 
     def json_str(self):
-        pass
         display = deepcopy(self.grid)
         for u in self.p1_units.values():
             display[u.y][u.x] = u
         for u in self.p2_units.values():
             display[u.y][u.x] = u.string().upper()
-
+        print(display)
         def inner(r): return '[{}]'.format(
             ','.join(map(lambda x: (x if isinstance(x, str) else x.string()), r)))
         return '[{}]'.format(','.join(map(inner, display)))

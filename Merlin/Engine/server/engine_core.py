@@ -69,8 +69,8 @@ class GameEngine:
         print("Loading Map:", file_name)
         self.map = Map(file_name, self.tileFactory)
 
-    def __runGameLoop(self, map):
-        game = self.gameFactory.getGame(self.connections, map)
+    def __runGameLoop(self, gamemap):
+        game = self.gameFactory.getGame(self.connections, gamemap)
         # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0

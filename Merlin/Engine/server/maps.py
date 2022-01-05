@@ -9,9 +9,10 @@ class Map:
     """
 
     def __init__(self, map_file, tileFactory):
-        self.map_file = None
+        self.map_file = map_file
         self.tileFactory = tileFactory
         self.map = []
+        self.deserialize()
 
     def deserialize(self):
         """
