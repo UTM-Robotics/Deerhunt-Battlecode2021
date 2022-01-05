@@ -128,7 +128,7 @@ class MerlinGridGame(GridGame):
 
         x += rx
         y += ry
-        return x,y
+        return x, y
 
         # return self.all_units.get('{},{}'.format(x, y), None)
     def make_move(self, k, v, player_state, player_name, opponent_state):

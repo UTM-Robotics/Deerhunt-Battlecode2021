@@ -48,4 +48,4 @@ MINING_REWARDS = {
     Tiles.SILVER: 75,
     Tiles.COPPER: 75
 }
-MINING_TIME = 3
+MINING_TIME = 3 # one of your turns, one of the enemies turns.
