@@ -31,12 +31,6 @@ class Move:
         The subclass should implement this
         '''
         pass
-    def verifyMove():
-        '''
-        Returns whether the move is valid
-        The subclass should implement this
-        '''
-        pass
     def makeMove(): #Note that this should take in a game state
         '''
         Perform move on the game state
