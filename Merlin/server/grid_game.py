@@ -9,10 +9,35 @@ from Engine.server.maps import Map
 from .unit import *
 from .tile import BaseTile
 from .move import *
-from game.constants import Units
-from game.constants import Direction
-from game.constants import MINING_REWARDS
-from game.constants import TURNS_PER_PLAYER
+from game.constants import Units, Direction, MAX_ATTACK_RANGE, MINING_REWARDS, TURNS_PER_PLAYER
+
+def direction_to_coord(x,y, direction):
+    if direction == Direction.DOWN:
+        return (x, y + 1)
+    if direction == Direction.UP:
+        return (x, y - 1)
+    if direction == Direction.LEFT:
+        return (x - 1, y)
+    if direction == Direction.RIGHT:
+        return (x + 1, y)
+    return None, None
+
+def is_within_map(map,x,y):
+    return 0 <= x and x < len(map) and 0 <= y and y < len(map[0])
+
+def is_conflicting(x,y,all_units):
+    return all_units.get('{},{}'.format(x, y),None) != None
+
+def is_straight_line(x,y,targetX,targetY):
+    return bool(targetX - x != 0) != bool(targetY - y != 0)
+
+def can_reach(x,y,targetX,targetY,unitType):
+    if not is_straight_line(x,y,targetX,targetY):
+        return False
+    
+    dist = abs(targetX - x) + abs(targetY - y)
+    return MAX_ATTACK_RANGE[unitType] <= dist
+
 
 class MerlinGridGame(GridGame):
     """
@@ -52,51 +77,97 @@ class MerlinGridGame(GridGame):
         player_flag['x'] = x
         player_flag['y'] = y
 
-    def verify_move(self, k:int, v:Move, player_state, player_resources, enemy_units, moved_units):
+    def getEnemyFlag(self,name):
+        if self.p1_conn.name == name:
+            return self.p2_flag
+        else:
+            return self.p1_flag
+
+    def verify_move(self, k:int, v:Move, player_state, player_resources, name, enemy_units, moved_units):
         
         if k not in player_state:
             print('ERROR: Cannot move enemy unit: {}'.format(k))
             return False
         unit = player_state[k]
+
+        if unit.id in moved_units:
+            return False
         #Checks if unit is currently doing something preventing them from moving
         if isinstance(unit, Unit):
             if isinstance(v, MineMove):
-                if v.verifyMove(self.grid):
+                if not isinstance(unit, WorkerUnit):
+                    return False
+                if unit.is_duplicating():
+                    print('ERROR: {} cannot act while duplicating'.format(k))
+                    return False
+
+                if unit.is_mining():
+                    print('ERROR: {} cannot act while mining'.format(k))
+                    return False
+                
+                if repr(self.grid[unit.x][unit.y]) in Tiles._value2member_map_:
                     moved_units.add(unit.id)
                     return True
                 else:
                     return False
             elif isinstance(v, BuyMove):
-                if v.verifyMove(self.grid, player_resources):
+                if unit.type != Units.WORKER:
+                    return False
+                
+                if v.unitType not in Units._value2member_map_:
+                    return False
+
+                unitCost = UPGRADE_COSTS[v.unitType][0]
+                if (player_resources < unitCost):
+                    return False
+                newX, newY = direction_to_coord(unit.x,unit.y,v.direction)
+                if newX == None and newY == None:
+                    return False
+
+                if is_within_map(self.grid, newX, newY):
                     moved_units.add(unit.id)
                     return True
                 else:
                     return False
             elif isinstance(v, CaptureMove):
-
-                    if v.verifyMove(self.all_units, ):
-                        moved_units.add(unit.id)
-                        return True
-                    else:
-                        return False
+                if unit.type != Units.SCOUT:
+                    return False
+                newX, newY = direction_to_coord(unit.x,unit.y,v.direction)
+                if newX == None and newY == None:
+                    return False
+                enemyFlag = self.getEnemyFlag(name)
+                if enemyFlag['x'] == newX and enemyFlag['y'] == newY:
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
             elif isinstance(v, DirectionMove):
-                    if v.verifyMove(self.grid, self.all_units):
-                        moved_units.add(unit.id)
-                        return True
-                    else:
-                        return False
+                newX, newY = direction_to_coord(unit.x,unit.y,v.direction)
+                if not is_within_map(self.grid,newX,newY):
+                    return False
+                if repr(self.grid[newX][newY]) != Tiles.WALL and not is_conflicting(newX,newY, self.all_units):
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
             elif isinstance(v, AttackMove):
-                    if v.verifyMove(self.all_units):
-                        moved_units.add(unit.id)
-                        return True
-                    else:
-                        return False
+                targetX, targetY = v.target
+                if not is_within_map(targetX, targetY):
+                    return False
+                if can_reach(unit.x,unit.y, targetX, targetY, unit.type):
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
             elif isinstance(v, UpgradeMove):
-                    if v.verifyMove(self.grid):
-                        moved_units.add(unit.id)
-                        return True
-                    else:
-                        return False
+                if unit.level >= MAX_LEVEL:
+                    return False
+                unitCost = UPGRADE_COSTS[v.unitType][unit.level + 1]
+                if player_resources >= unitCost:
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
         return False
 
     def get_matching_unit(self, x, y, attack):
@@ -213,7 +284,7 @@ class MerlinGridGame(GridGame):
         for m in moves:
             unit_id, move_object = m
             # Key is unit id , value is move arguments
-            if self.verify_move(unit_id, move_object, current, self.resources[name], opponent, moved_units):
+            if self.verify_move(unit_id, move_object, current, self.resources[name], name, opponent, moved_units):
                 self.make_move(unit_id, move_object, current, name, opponent)
 
     # Creates the workers desired duplicate at a given tile.

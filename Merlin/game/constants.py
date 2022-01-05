@@ -32,15 +32,41 @@ class Direction(Enum):
     LEFT = 'LEFT'
     RIGHT = 'RIGHT'
 
+# 0 represents cost to buy, anything above represents cost to upgrade
 UPGRADE_COSTS = {
-  Units.WORKER: {0:10,
-                1:50,
-                2:30,
-                3:40
-                },
-  Units.SCOUT: {},
-  Units.KNIGHT: {},
-  Units.ARCHER: {}
+  Units.WORKER: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+    },
+  Units.SCOUT: {
+      0:10,
+      1:50,
+      2:30,
+      3:40
+  },
+  Units.KNIGHT: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+  },
+  Units.ARCHER: {
+    0:10,
+    1:50,
+    2:30,
+    3:40
+  }
+}
+
+MAX_LEVEL = 3
+
+MAX_ATTACK_RANGE = {
+    Units.ARCHER: 2,
+    Units.WORKER: 0,
+    Units.SCOUT: 1,
+    Units.KNIGHT: 1
 }
 
 MINING_REWARDS = {
