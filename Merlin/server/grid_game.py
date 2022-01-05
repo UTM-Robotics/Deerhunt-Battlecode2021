@@ -261,7 +261,34 @@ class MerlinGridGame(GridGame):
         return self.grid, self.all_units, self.resources
 
     def getWinner(self):
+        #one side has no units or their flag has reached enemy base
+        #if timeout, whoever has most resources
+        p1Name = self.p1_conn.name
+        p2Name = self.p2_conn.name
+        if self.turns > self.totalTurns:
+            #timed out
+            return p1Name if self.resources[p1Name] >= self.resources[p2Name] else p2Name
+        
+        p1FlagTile = self.grid[self.p1_flag['x']][self.p1_flag['y']]
+
+        p2FlagTile = self.grid[self.p2_flag['x']][self.p2_flag['y']]
+
+        if repr(p1FlagTile) == Tiles.BASE:
+            if self.p1_flag['y'] > len(self.grid) / 2:
+                return p2Name
+            
+        if repr(p2FlagTile) == Tiles.BASE:
+            if self.p2_flag['y'] < len(self.grid) / 2:
+                return p1Name
+        
+        if len(self.p1_units.values()) == 0:
+            return p2Name
+        
+        if len(self.p2_units.values()) == 0:
+            return p1Name
+        
         return None
+
 
     def tick_player(self, conn, current, opponent, name, turns):
         #Gets a list of moves from the player
