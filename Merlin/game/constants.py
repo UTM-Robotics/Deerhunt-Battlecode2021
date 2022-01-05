@@ -16,7 +16,7 @@ class Units(Enum):
     KNIGHT = 3
     ARCHER = 4
 
-class Tiles(Enum):
+class Tiles():
     GROUND = ' ' # A walkable tile
     WALL = 'X' # A non-walkable tile
     GOLD = 'G' # A gold resource tile, check manual for worth when mined.

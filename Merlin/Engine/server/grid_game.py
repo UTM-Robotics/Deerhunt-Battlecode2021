@@ -50,7 +50,6 @@ class GridGame():
         del self.all_units['{},{}'.format(x, y)]
 
     def json_str(self):
-        pass
         display = deepcopy(self.grid)
         for u in self.p1_units.values():
             display[u.y][u.x] = u

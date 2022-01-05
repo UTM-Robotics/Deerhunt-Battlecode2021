@@ -56,7 +56,6 @@ class GameEngine:
         conn, addr = self.sock.accept()
         self.connections.append(ClientConnection(conn, f'p{player}', verbose=self.verbose, moveFactory=self.moveFactory))
         self.addresses.append(addr)
-
         if not self.verbose:
             conn.settimeout(10)
         print(f'Connected to client {player} at addr')
@@ -71,28 +70,36 @@ class GameEngine:
 
     def __runGameLoop(self, map):
         game = self.gameFactory.getGame(self.connections, map)
-        # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0
         print('Game starting...')
+        if self.does_render:
+            current_map, current_units, current_misc = game.get_state()
+            self.renderEngine.update(current_map, current_units, current_misc)
+            self.renderEngine.draw()
         while game.getWinner() == None: # TODO: Raise notimplementedError
+            print("Turn:", turn)
             game.tick()
             current_map, current_units, current_misc = game.get_state()
             if self.does_render:
                 self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
             if self.verbose:
-                print(game.get_state)
+                #fix this
+                #print(game.get_state())
+                input()
+            if self.verbose or self.does_render:
+                input()
             turn += 1
         winner = game.getWinner()
         print('Winner:', winner)
         return game.getWinner()
 
     def start(self, doRender=False, savePath="", maxTurns=200):
-        #Retrieves the port and verbose flag from arguments
+        # Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
-        parser.add_argument('--logpath', type=str, help='If selected, outputs the game state to a file.', nargs='?', const=None)
+        parser.add_argument('--replaysavepath', type=str, help='If selected, outputs the game state to a file.', nargs='?', const=None)
         parser.add_argument('--outputpath', type=str, help='The port to listen on', nargs='?', const=None)
 
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
@@ -101,16 +108,16 @@ class GameEngine:
         args = parser.parse_args()
         self.verbose = args.verbose
         self.does_render = args.render
-        self.save_path = args.logpath
+        self.save_path = args.replaysavepath
         # TODO: implement save_path feature - Should serialize all contents directly to a file at save_path.
-        # TODO: implement a 
+        # TODO: implement a logpa
         self.__loadMap()
         
         self.__launchServer(args.port)
         for player in range(self.NUMPLAYERS):
             self.__connectNextPlayer()
         if self.does_render:
-            self.renderEngine = RenderingEngine(self.mapRenderFactory)
+            self.renderEngine = RenderingEngine(self.renderFactory)
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.close()
