@@ -48,3 +48,4 @@ MINING_REWARDS = {
     Tiles.SILVER: 75,
     Tiles.COPPER: 75
 }
+MINING_TIME = 3

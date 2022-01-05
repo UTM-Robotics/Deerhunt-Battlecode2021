@@ -51,15 +51,16 @@ class GameMove(Move):
 
 
 class AttackMove(GameMove):
-  def __init__(self, unit, target):
+  def __init__(self, unit, direction, length):
       super().__init__(unit)
-      self.target = target
+      self.direction
+      self.length
   
   def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
-      return {'command': Moves.ATTACK, "unit": self.unit, "target": self.target }
+      return {'command': Moves.ATTACK, "unit": self.unit, "target": self.target}
   def verifyMove(self):
       '''
       Returns whether the move is valid

@@ -1,4 +1,5 @@
 import json
+from Merlin.game.constants import MINING_TIME, UPGRADE_COSTS
 from game.constants import Tiles
 from server import *
 from copy import deepcopy
@@ -131,42 +132,23 @@ class MerlinGridGame(GridGame):
 
         # return self.all_units.get('{},{}'.format(x, y), None)
     def make_move(self, k, v, player_state, player_name, opponent_state):
-        pass
-        # if isinstance(v, GroundMove):
-        #     m = v.get_relative_moves()
-        #     x, y = player_state[k].pos_tuple()
-        #     player_state[k].set_relative_location(self.all_units, *m)
-        #     self.move_unit(x, y, player_state[k])
-        # elif isinstance(v, AttackMove):
-        #     x, y = player_state[k].pos_tuple()
-        #     rx, ry = v.get_relative_moves()
-        #     uid = str(self.get_unit(x+rx, y+ry).id)
-        #     try:
-        #         del opponent_state[uid]
-        #     except KeyError:
-        #         # User tried to delete their own unit
-        #         pass
-
-        #     self.del_unit(x+rx, y+ry)
-        # elif isinstance(v, StasisMove):
-        #     self.currently_duplicating[k] = (
-        #         player_state, player_state[k].start_duplication(v.direction, v.unit_type))
-        #     if v.unit_type == MELEE_UNIT:
-        #         self.resources[player_name] -= player_state[k].melee_cost
-        #     else:
-        #         self.resources[player_name] -= player_state[k].worker_cost
-        # elif isinstance(v, MineMove):
-        #     self.currently_mining[k] = (
-        #         player_name, player_state[k].start_mining())
-        # elif isinstance(v, StunMove):
-        #     x, y = player_state[k].pos_tuple()
-        #     rx, ry = v.get_relative_moves()
-        #     uid = str(self.get_unit(x+rx, y+ry).id)
-        #     try:
-        #         self.currently_stunned[k] = (player_name, opponent_state[uid].stun())
-        #         self.resources[player_name] -= player_state[k].stun_cost
-        #     except:
-        #         pass
+        unit = player_state[k]
+        if isinstance(v, DirectionMove):
+            m = v.get_relative_moves()
+            x, y = player_state[k].pos_tuple()
+            player_state[k].set_relative_location(self.all_units, *m)
+            self.move_unit(x, y, player_state[k])
+        if isinstance(v, AttackMove):
+            
+        elif isinstance(v, UpgradeMove):
+            self.resources[player_name] -= UPGRADE_COSTS[unit.unit_type][unit.level]
+            unit.level += 1
+        elif isinstance(v, BuyMove):
+            x,y = v.x, v.y
+        elif isinstance(v, MineMove):
+            x,y = unit.x, unit.y
+            miningType = self.grid[unit.x][unit.y].id
+            v.mining_status = MINING_TIME
 
     def json_str(self):
         display = deepcopy(self.grid)
