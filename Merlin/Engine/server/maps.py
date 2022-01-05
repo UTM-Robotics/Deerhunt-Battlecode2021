@@ -9,9 +9,10 @@ class Map:
     """
 
     def __init__(self, map_file, tileFactory):
-        self.map_file = None
+        self.map_file = map_file
         self.tileFactory = tileFactory
         self.map = []
+        self.deserialize()
 
     def deserialize(self):
         """
@@ -25,14 +26,14 @@ class Map:
             i = 0
             for line in f.readlines():
                 self.map.append([])
-                for char in line:
+                for char in line.strip("\n"):
                     tile = self.tileFactory.createTile(char)
                     if not tile:
                         raise IllegalTileException(f"Error: unknown symbol: {char} found in {self.map_file}")
                     self.map[i].append(tile)
                 i += 1
             f.close()
-        print(f"finished deserializing map {self.map_file}")
+        print(f"Deserialized map: {self.map_file}")
 
     def serialize(self):
         """
