@@ -1,10 +1,10 @@
 from .engine_core import ClientEngine
 class DecodeDataFactory:
-  def decode(js):
+  def decode(self, js):
     return NotImplementedError
 
 class EncodeDataFactory:
-  def encode(moves):
+  def encode(self, moves):
     return NotImplementedError
 class ClientLauncher:
     '''

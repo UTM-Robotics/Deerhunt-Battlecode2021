@@ -1,5 +1,7 @@
 import json
 from typing import List
+
+from Engine.client.unit import Unit
 from .client_connection import ClientConnection
 from copy import deepcopy
 from .maps import Map
@@ -11,9 +13,6 @@ class GridGame():
 
     def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, map:Map):
         self.next_id = 0
-        self.currently_duplicating = {}
-        self.currently_mining = {}
-        self.currently_stunned = {}
         self.all_units = {}
         self.p1_conn = player_one_connection
         self.p2_conn = player_two_connection
@@ -39,6 +38,10 @@ class GridGame():
     
         self.all_units['{},{}'.format(unit.x, unit.y)] = unit
 
+    def get_tile(self, unit:Unit):
+        x,y = unit.position()
+        return self.grid[x][y]
+
     def move_unit(self, x, y, unit):
         del self.all_units['{},{}'.format(x, y)]
         self.all_units['{},{}'.format(unit.x, unit.y)] = unit
@@ -46,8 +49,24 @@ class GridGame():
     def get_unit(self, x, y):
         return self.all_units['{},{}'.format(x, y)]
 
+    def has_unit(self, x, y):
+        return '{},{}'.format(x, y) in self.all_units
+
     def del_unit(self, x, y):
         del self.all_units['{},{}'.format(x, y)]
+
+    # returns the player to which the unit is owned by.
+    def get_unit_player(self, unit):
+        if unit.id in self.p1_units:
+            return self.p1_units
+        else:
+            return self.p2_units
+
+    def get_unit_player_name(self, unit):
+        if unit.id in self.p1_units:
+            return self.p1_conn.name
+        else:
+            return self.p2_conn.name
 
     def json_str(self):
         pass
@@ -73,7 +92,7 @@ class GridGame():
         # TODO this probably should be changed to misc
         return self.grid, self.all_units, self.resources
 
-    def verify_move(self, k, v, player_state, player_resources, enemy_units, moved_units):
+    def verify_move(self, k, v, player_state, player_resources, enemy_units, **args):
         raise NotImplementedError
 
     def make_move(self, k, v, player_state, player_name, opponent_state):

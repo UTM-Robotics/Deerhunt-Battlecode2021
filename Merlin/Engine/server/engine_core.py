@@ -82,13 +82,17 @@ class GameEngine:
                 self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
             if self.verbose:
-                print(game.get_state)
+                # TODO: fix this
+                #print(game.get_state())
+                input()
+            if self.verbose or self.does_render:
+                input()
             turn += 1
         winner = game.getWinner()
         print('Winner:', winner)
         return game.getWinner()
 
-    def start(self, doRender=False, savePath="", maxTurns=200):
+    def start(self, doRender=False, savePath=""):
         #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')

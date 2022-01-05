@@ -24,6 +24,5 @@ class ClientEngine:
     count = 0
     while controller.tick():
       count += 1
-      print("Tick #: " , count)
 
     sock.close()

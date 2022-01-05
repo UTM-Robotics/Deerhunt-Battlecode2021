@@ -1,71 +1,103 @@
 import json
+from game.constants import Tiles
 from server import *
 from copy import deepcopy
 
 from Engine.server.grid_game import GridGame, GridGameFactory
-
-
+from Engine.server.grid_game import ClientConnection
+from Engine.server.maps import Map
+from .unit import *
+from .tile import BaseTile
+from .move import *
+from game.constants import Units
+from game.constants import Direction
+from game.constants import MINING_REWARDS
+from game.constants import TURNS_PER_PLAYER
 
 class MerlinGridGame(GridGame):
     """
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
+    
+    This game is won by a player capturing the other player's flag
+    
     """
+    def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, map:Map):
+        super().__init__(player_one_connection, player_two_connection, map)
+        self.turns = 0
+        self.totalTurns = TURNS_PER_PLAYER*2
+        self.p1_flag = {}
+        self.p2_flag = {}
+        self.unitFactory = UnitFactory()
+        # Make team's initial units
+        for row in range(len(self.grid)):
+            for col in range(len(row)):
+                tile = self.top[row][col]
+                if isinstance(tile, BaseTile):
+                    if row < len(self.grid)/2:
+                        unit = self.unitFactory(Units.WORKER, row, col, 0)
+                        self.add_unit(self.p1_units, unit)
+                    else:
+                        unit = self.unitFactory(Units.WORKER, row, col, 0)
+                        self.add_unit(self.p2_units, unit)
+        for row in range(len(self.grid)):
+            for col in range(len(row)):
+                tile = self.top[row][col]
+                if isinstance(tile, BaseTile):
+                    if row < len(self.grid)/2:
+                        self.setFlag(self.p1_flag, col, row)
+                    else:
+                        self.setFlag(self.p2_flag, col, row)
 
-    def verify_move(self, k, v, player_state, player_resources, enemy_units, moved_units):
-        pass
-        # if k not in player_state:
-        #     print('ERROR: Cannot move enemy unit: {}'.format(k))
-        #     return False
+    def setFlag(self, player_flag, x, y):
+        player_flag['x'] = x
+        player_flag['y'] = y
 
-        # #Checks if unit is currently doing something preventing them from moving
-        # if isinstance(player_state[k], Unit):
-        #     if player_state[k].is_duplicating():
-        #         print('ERROR: {} cannot act while duplicating'.format(k))
-        #         return False
+    def verify_move(self, k:int, v:Move, player_state, player_resources, enemy_units, moved_units):
+        
+        if k not in player_state:
+            print('ERROR: Cannot move enemy unit: {}'.format(k))
+            return False
+        unit = player_state[k]
+        #Checks if unit is currently doing something preventing them from moving
+        if isinstance(unit, Unit):
+            if isinstance(v, MineMove):
+                if v.verifyMove(self.grid):
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
+            elif isinstance(v, BuyMove):
+                if v.verifyMove(self.grid, player_resources):
+                    moved_units.add(unit.id)
+                    return True
+                else:
+                    return False
+            elif isinstance(v, CaptureMove):
 
-        #     if player_state[k].is_mining():
-        #         print('ERROR: {} cannot act while mining'.format(k))
-        #         return False
-
-        #     if player_state[k].is_stunned():
-        #         print('ERROR: {} cannot act while stunned'.format(k))
-        #         return False
-
-        #     if k in moved_units:
-        #         print('ERROR: Cannot make multiple actions for unit {}'.format(k))
-        #         return False
-
-        #     moved_units.add(k)
-
-        # x, y = player_state[k].pos_tuple()
-
-        # #Checks if the arguments for each move is valid
-        # if isinstance(v, GroundMove) and (not v.valid_path(self.grid, self.all_units, x, y) or v.len() < 0 or v.len() > 1):
-        #     print('ERROR: Invalid path for unit {}'.format(k))
-        #     return False
-        # elif isinstance(v, AttackMove) and (self.get_matching_unit(x, y, v) is None or v.len() < 0 or v.len() > 1):
-        #     print('ERROR: Unit {} cannot attack there'.format(k))
-        #     return False
-        # elif isinstance(v, StunMove):
-        #     if not player_state[k].can_stun(player_resources):
-        #         print("ERROR: Unit {} not enough resources to stun".format(k))
-        #         return False
-        #     if self.get_matching_unit(x, y, v) is None or (v.len() < 0) or (v.len() > 2):
-        #         print('ERROR: Unit {} cannot stun there'.format(k))
-        #         return False
-        # elif isinstance(v, StasisMove) and (not player_state[k].can_duplicate(player_resources, v.unit_type)
-        #                                     or not v.free_spot(x, y, self.all_units, self.grid)):
-        #     print('ERROR: Unit {} cannot duplicate now'.format(k))
-        #     return False
-        # elif isinstance(v, MineMove) and (not player_state[k].can_mine() or not self.is_mining_resource(x, y)):
-        #     print('ERROR: Unit {} cannot mine now'.format(k))
-        #     return False
-
-        # return True
-
-    def is_mining_resource(self, x, y):
-        pass
-        # return isinstance(self.grid[y][x], ResourceTile)
+                    if v.verifyMove(self.all_units, ):
+                        moved_units.add(unit.id)
+                        return True
+                    else:
+                        return False
+            elif isinstance(v, DirectionMove):
+                    if v.verifyMove(self.grid, self.all_units):
+                        moved_units.add(unit.id)
+                        return True
+                    else:
+                        return False
+            elif isinstance(v, AttackMove):
+                    if v.verifyMove(self.all_units):
+                        moved_units.add(unit.id)
+                        return True
+                    else:
+                        return False
+            elif isinstance(v, UpgradeMove):
+                    if v.verifyMove(self.grid):
+                        moved_units.add(unit.id)
+                        return True
+                    else:
+                        return False
+        return False
 
     def get_matching_unit(self, x, y, attack):
         pass
@@ -76,6 +108,28 @@ class MerlinGridGame(GridGame):
 
         # return self.all_units.get('{},{}'.format(x, y), None)
 
+    def get_direction_change(self, direction):
+        x = 0
+        y = 0
+        if direction == Direction.UP:
+            y = 1
+        elif direction == Direction.Down:
+            y = -1
+        elif direction == Direction.Left:
+            x = -1
+        elif direction == Direction.Right:
+            x = 1
+        return x,y
+
+    def get_relative_location(self, x, y, direction):
+
+        rx, ry = self.get_direction_change(direction)
+
+        x += rx
+        y += ry
+        return x,y
+
+        # return self.all_units.get('{},{}'.format(x, y), None)
     def make_move(self, k, v, player_state, player_name, opponent_state):
         pass
         # if isinstance(v, GroundMove):
@@ -142,57 +196,70 @@ class MerlinGridGame(GridGame):
         return None
 
     def tick_player(self, conn, current, opponent, name, turns):
-        pass
-        # #Gets a list of moves from the player
-        # moves = conn.tick(self, current, opponent, self.resources, turns)
+        #Gets a list of moves from the player
+        misc = {"your_flag": {},
+                "enemy_flag": {}
+        }
 
-        # moved_units = set()
-        # #Goes through each given move and verifies it is valid. If it is execute it.
-        # for m in moves:
-        #     k, v = m
-        #     if self.verify_move(k, v, current, self.resources[name], opponent, moved_units):
-        #         self.make_move(k, v, current, name, opponent)
+        if name  == self.p1_conn.name:
+            misc = {"your_flag":self.p1_flag,
+                    "enemy_flag":self.p2_flag
+            }
+        else:
+            misc = {"your_flag":self.p2_flag,
+                    "enemy_flag":self.p1_flag
+            }
+        moves = conn.tick(self, current, opponent, self.resources, turns, misc)
+
+        moved_units = {} # id to n number of moves
+        #Goes through each given move and verifies it is valid. If it is execute it.
+        for m in moves:
+            unit_id, move_object = m
+            # Key is unit id , value is move arguments
+            if self.verify_move(unit_id, move_object, current, self.resources[name], opponent, moved_units):
+                self.make_move(unit_id, move_object, current, name, opponent)
+
+    # Creates the workers desired duplicate at a given tile.
+    def create_duplicate(self,unit:WorkerUnit):
+        location = self.get_relative_location(*unit.pos_tuple(), unit.action_direction)
+        return self.unitFactory.createUnit(unit.duplicating_to_type, *location) # TODO finish directional spawning.
 
 
     #tick is run each turn and updates the game state
     def tick(self):
-        turns = 0
+        # manage each units actions that change game state overall.
         #Checks if any units are duplicating, if they are increment the status and create a new unit if they are complete
-        # for k, (player, unit) in list(self.currently_duplicating.items()):
-        #     unit.duplication_status -= 1
-        #     if unit.duplication_status == 0:
-        #         del self.currently_duplicating[k]
-        #         if self.can_duplicate_to(unit):
-        #             self.add_unit(player, self.create_duplicate(unit))
+        for unit in self.all_units:
+            player = self.get_unit_player()
+            if isinstance(unit, WorkerUnit) and unit.is_duplicating():
+                unit.duplication_status -= 1
+                location = self.get_relative_location(*unit.pos_tuple(), unit.action_direction)
+                if unit.duplication_status <= 0 and not self.has_unit(*location):
+                    self.add_unit(player, self.create_duplicate(unit))
+                    unit.finish_duplicating()
 
-        # #Checks if any units are mining, if they are increment the status and add resources if they complete
-        # for k, (p_name, unit) in list(self.currently_mining.items()):
-        #     unit.mining_status -= 1
-        #     if unit.mining_status == 0:
-        #         del self.currently_mining[k]
-        #         self.resources[p_name] += 75
-
-        # #Checks if any units are stunned, if they are increment the status
-        # for k, (player, unit) in list(self.currently_stunned.items()):
-        #     unit.stun_status -= 1
-        #     if unit.stun_status == 0:
-        #         del self.currently_stunned[k]
+        #Checks if any units are mining, if they are increment the status and add resources if they complete
+        for unit in self.all_units:
+            player_name = self.get_unit_player_name(unit)
+            if isinstance(unit, WorkerUnit) and unit.is_mining():
+                unit.mining_status -= 1
+                if unit.mining_status == 0:
+                    unit.mining_status = -1
+                    tile = self.get_tile(unit)
+                    self.resources[player_name] += MINING_REWARDS[str(tile)]
 
         #Gets the moves from each player and executes.
-        self.tick_player(self.p1_conn, self.p1_units,
-                         self.p2_units, self.p1_conn.name, turns)
-        self.print_map(self.p1_conn.name, self.p2_conn.name)
-
-        if len(self.p2_units) == 0:
-            return self.p1_conn.name
-
-        self.tick_player(self.p2_conn, self.p2_units,
-                         self.p1_units, self.p2_conn.name, turns)
-        self.print_map(self.p1_conn.name, self.p2_conn.name)
-
-        if len(self.p1_units) == 0:
-            return self.p2_conn.name
-
+        if self.turns % 2 == 0:
+            print("tick 1")
+            self.tick_player(self.p1_conn, self.p1_units,
+                         self.p2_units, self.p1_conn.name, self.turns)
+            self.print_map(self.p1_conn.name, self.p2_conn.name)
+        else:
+            print("Tick 2")
+            self.tick_player(self.p2_conn, self.p2_units,
+                            self.p1_units, self.p2_conn.name, self.turns)
+            self.print_map(self.p1_conn.name, self.p2_conn.name)
+        self.turns += 1
 
 class MerlinGridGameFactory(GridGameFactory):
     def getGame(self, connections, map)->MerlinGridGame:

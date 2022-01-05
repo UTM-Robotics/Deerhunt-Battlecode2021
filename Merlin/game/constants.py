@@ -1,5 +1,6 @@
 from enum import Enum
 
+TURNS_PER_PLAYER = 200
 #Represents all the valid moves a player can make
 class Moves(Enum):
     ATTACK = 1
@@ -31,3 +32,19 @@ class Direction(Enum):
     LEFT = 'LEFT'
     RIGHT = 'RIGHT'
 
+UPGRADE_COSTS = {
+  Units.WORKER: {0:10,
+                1:50,
+                2:30,
+                3:40
+                },
+  Units.SCOUT: {},
+  Units.KNIGHT: {},
+  Units.ARCHER: {}
+}
+
+MINING_REWARDS = {
+    Tiles.GOLD: 75,
+    Tiles.SILVER: 75,
+    Tiles.COPPER: 75
+}

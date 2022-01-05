@@ -23,7 +23,7 @@ class UnitFactory():
             unit = ArcherUnit(*restInfo, self.id_count)
         else:
             return None
-
+        self.id_count += 1
         return unit
 
 
@@ -43,31 +43,35 @@ class GameUnit(Unit):
   def __repr__(self):
       return NotImplemented()
 
-  def attack():
-      return NotImplemented()
-
-  def can_move(direction):
-      return NotImplemented()
-
-  def can_hit(direction):
-      return NotImplemented()
 
 class WorkerUnit(GameUnit):
 
     def __init__(self, x, y, id):
         super().__init__(x, y, Unit.WORKER, id, 100, 1)
+        self.duplication_time = -1
+        self.duplicating_to = None
+        self.is_duplicating = False
+        self.action_direction = None
+        self.mining_status = -1
 
     def __repr__(self):
         return "Worker"
+    
+    def is_duplicating(self):
+        return self.is_duplicating
 
-    def attack():
-        pass
+    def start_duplication(self, duplicating_to_type, duplication_time):
+        self.is_duplicating = True
+        self.duplicating_to_type = duplicating_to_type
+        self.duplication_time = duplication_time
 
-    def can_move():
-        pass
-
-    def can_hit(direction):
-        pass
+    def finish_duplicating(self):
+        self.duplication_time = -1
+        self.duplicating_to = None
+        self.is_duplicating = False
+    
+    def is_mining(self):
+        return self.mining_time > 0
 
 class ScoutUnit(GameUnit):
 
@@ -77,16 +81,7 @@ class ScoutUnit(GameUnit):
     def __repr__(self):
         return "Scout"
 
-    def attack():
-        pass
-
-    def can_move():
-        pass
-
-    def can_hit(direction):
-        pass
-
-    def capture():
+    def capture(self):
         self.has_flag = True
 
 class KnightUnit(GameUnit):
@@ -97,14 +92,6 @@ class KnightUnit(GameUnit):
     def __repr__(self):
         return "Knight"
 
-    def attack():
-        pass
-
-    def can_move():
-        pass
-
-    def can_hit(direction):
-        pass
 
 class ArcherUnit(GameUnit):
 
@@ -116,9 +103,6 @@ class ArcherUnit(GameUnit):
         return "Archer"
 
     def attack():
-        pass
-
-    def can_move():
         pass
 
     def can_hit(direction):

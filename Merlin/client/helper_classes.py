@@ -1,5 +1,6 @@
-from move import Move
-
+from .move import Move
+from game.constants import Tiles
+from Engine.client.unit import Unit
 class Map:
     # all outputs will be of the form (x, y). i.e., (c, r).
     def __init__(self, map_grid: [[str]]) -> None:
@@ -22,7 +23,7 @@ class Map:
         Preconditions: x >= 0
                        y >= 0
         """
-        return self.grid[y][x].lower() == 'x'
+        return self.grid[y][x].upper() == Tiles.WALL
 
     def is_resource(self, x: int, y: int) -> bool:
         """
@@ -30,7 +31,7 @@ class Map:
         Preconditions: x >= 0
                        y >= 0
         """
-        return self.grid[y][x].lower() == 'r'
+        return self.grid[y][x].upper() in [Tiles.COPPER, Tiles.SILVER, Tiles.GOLD]
 
     def find_all_resources(self) -> [(int, int)]:
         """

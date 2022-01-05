@@ -43,7 +43,7 @@ class ClientConnection:
             return self.moveFactory.createMove(id, body)
         except:
             #Happens if not enough data is send in body.
-            return
+            return None
 
     #filter_fog_of_war updates what each player can see on the board given each units vision
     def filter_fog_of_war(self, current, opponent):
@@ -66,15 +66,16 @@ class ClientConnection:
 
 
     #tick sends the current game state and retrieves a list of moves to execute from the client
-    def tick(self, game_state, me, them, resources, turns):
+    def tick(self, game_state, me, them, resources, turns, misc):
         try:
             #Sends the state to the client
             d = {
                 'map'         : [list(map(str, r)) for r in game_state.grid],
-                'my_units'    : self.units_to_dict(me),
-                'their_units' : self.units_to_dict(self.filter_fog_of_war(me, them)),
-                'my_resources': resources[self.name],
-                'turns_left'  : turns
+                'your_units'    : self.units_to_dict(me),
+                'enemy_units' : self.units_to_dict(self.filter_fog_of_war(me, them)),
+                'resources': resources[self.name],
+                'turns_left'  : turns,
+                **misc
             }
 
             data = json.dumps(d).encode()
@@ -92,7 +93,8 @@ class ClientConnection:
 
             #Parse to commands to unit moves and print them
             moves = [(str(k), self.create_move(k, v)) for k, v in j]
-
+            # k is unit id
+            # v is move arguments
             if self.verbose:
                 print(self.name, ':', moves)
 
