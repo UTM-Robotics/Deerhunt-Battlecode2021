@@ -30,18 +30,18 @@ class MerlinGridGame(GridGame):
         self.unitFactory = UnitFactory()
         # Make team's initial units
         for row in range(len(self.grid)):
-            for col in range(len(row)):
-                tile = self.top[row][col]
+            for col in range(len(self.grid[row])):
+                tile = self.grid[row][col]
                 if isinstance(tile, BaseTile):
                     if row < len(self.grid)/2:
-                        unit = self.unitFactory(Units.WORKER, row, col, 0)
+                        unit = self.unitFactory.createUnit(Units.WORKER, col, row)
                         self.add_unit(self.p1_units, unit)
                     else:
-                        unit = self.unitFactory(Units.WORKER, row, col, 0)
+                        unit = self.unitFactory.createUnit(Units.WORKER, col, row)
                         self.add_unit(self.p2_units, unit)
         for row in range(len(self.grid)):
-            for col in range(len(row)):
-                tile = self.top[row][col]
+            for col in range(len(self.grid[row])):
+                tile = self.grid[row][col]
                 if isinstance(tile, BaseTile):
                     if row < len(self.grid)/2:
                         self.setFlag(self.p1_flag, col, row)
@@ -168,14 +168,12 @@ class MerlinGridGame(GridGame):
         #     except:
         #         pass
 
-
     def json_str(self):
         display = deepcopy(self.grid)
         for u in self.p1_units.values():
-            display[u.y][u.x] = u
+            display[u.y][u.x] = u.string()
         for u in self.p2_units.values():
-            display[u.y][u.x] = u.string().upper()
-        print(display)
+            display[u.y][u.x] = u.string()
         def inner(r): return '[{}]'.format(
             ','.join(map(lambda x: (x if isinstance(x, str) else x.string()), r)))
         return '[{}]'.format(','.join(map(inner, display)))
@@ -228,8 +226,8 @@ class MerlinGridGame(GridGame):
     def tick(self):
         # manage each units actions that change game state overall.
         #Checks if any units are duplicating, if they are increment the status and create a new unit if they are complete
-        for unit in self.all_units:
-            player = self.get_unit_player()
+        for unit in self.all_units.values():
+            player = self.get_unit_player(unit)
             if isinstance(unit, WorkerUnit) and unit.is_duplicating():
                 unit.duplication_status -= 1
                 location = self.get_relative_location(*unit.pos_tuple(), unit.action_direction)
@@ -238,7 +236,7 @@ class MerlinGridGame(GridGame):
                     unit.finish_duplicating()
 
         #Checks if any units are mining, if they are increment the status and add resources if they complete
-        for unit in self.all_units:
+        for unit in self.all_units.values():
             player_name = self.get_unit_player_name(unit)
             if isinstance(unit, WorkerUnit) and unit.is_mining():
                 unit.mining_status -= 1
@@ -249,15 +247,13 @@ class MerlinGridGame(GridGame):
 
         #Gets the moves from each player and executes.
         if self.turns % 2 == 0:
-            print("tick 1")
             self.tick_player(self.p1_conn, self.p1_units,
                          self.p2_units, self.p1_conn.name, self.turns)
-            self.print_map(self.p1_conn.name, self.p2_conn.name)
+            #self.print_map(self.p1_conn.name, self.p2_conn.name)
         else:
-            print("Tick 2")
             self.tick_player(self.p2_conn, self.p2_units,
                             self.p1_units, self.p2_conn.name, self.turns)
-            self.print_map(self.p1_conn.name, self.p2_conn.name)
+            #self.print_map(self.p1_conn.name, self.p2_conn.name)
         self.turns += 1
 
 class MerlinGridGameFactory(GridGameFactory):

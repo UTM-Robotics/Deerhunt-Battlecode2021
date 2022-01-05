@@ -5,7 +5,6 @@ from game.constants import Tiles
 class MerlinTileFactory(TileFactory):
 
     def createTile(self, tileId):
-        print("creating tile:", tileId, Tiles.WALL)
         if tileId == Tiles.WALL:
             return WallTile()
         elif tileId == Tiles.GROUND:

@@ -68,7 +68,6 @@ class GridGame():
             return self.p2_conn.name
 
     def json_str(self):
-        pass
         display = deepcopy(self.grid)
         for u in self.p1_units.values():
             display[u.y][u.x] = u
