@@ -111,6 +111,12 @@ class MerlinGridGame(GridGame):
                 else:
                     return False
             elif isinstance(v, BuyMove):
+                if unit.type != Units.WORKER:
+                    return False
+                
+                if v.unitType not in Units._value2member_map_:
+                    return False
+
                 unitCost = UPGRADE_COSTS[v.unitType][0]
                 if (player_resources < unitCost):
                     return False
