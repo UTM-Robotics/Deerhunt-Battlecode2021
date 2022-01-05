@@ -267,7 +267,7 @@ class MerlinGridGame(GridGame):
         p2Name = self.p2_conn.name
         if self.turns > self.totalTurns:
             #timed out
-            return 'p1' if self.resources[p1Name] >= self.resources[p2Name] else 'p1'
+            return p1Name if self.resources[p1Name] >= self.resources[p2Name] else p2Name
         
         p1FlagTile = self.grid[self.p1_flag['x']][self.p1_flag['y']]
 
@@ -275,17 +275,17 @@ class MerlinGridGame(GridGame):
 
         if repr(p1FlagTile) == Tiles.BASE:
             if self.p1_flag['y'] > len(self.grid) / 2:
-                return 'p2'
+                return p2Name
             
         if repr(p2FlagTile) == Tiles.BASE:
             if self.p2_flag['y'] < len(self.grid) / 2:
-                return 'p1'
+                return p1Name
         
         if len(self.p1_units.values()) == 0:
-            return 'p2'
+            return p2Name
         
         if len(self.p2_units.values()) == 0:
-            return 'p1'
+            return p1Name
         
         return None
 
