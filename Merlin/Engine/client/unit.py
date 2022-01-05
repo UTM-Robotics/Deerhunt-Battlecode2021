@@ -1,4 +1,4 @@
-from move import Move
+from .move import Move
 
 class Unit:
     def __init__(self, attr: dict) -> None:
@@ -10,6 +10,8 @@ class Unit:
         self.x = attr['x']
         self.y = attr['y']
         self.id = attr['id']
+        self.health = attr['health']
+        self.level = attr['level']
 
     def position(self):
         """

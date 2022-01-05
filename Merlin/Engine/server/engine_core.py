@@ -68,8 +68,9 @@ class GameEngine:
         print("Loading Map:", file_name)
         self.map = Map(file_name, self.tileFactory)
 
-    def __runGameLoop(self, map):
-        game = self.gameFactory.getGame(self.connections, map)
+    def __runGameLoop(self, gamemap):
+        game = self.gameFactory.getGame(self.connections, gamemap)
+        # TODO: Change end game logic
         #Ticks the game unit there is a winner or the max_turns is reached
         turn = 0
         print('Game starting...')
@@ -84,19 +85,21 @@ class GameEngine:
             if self.does_render:
                 self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
-            if self.verbose:
-                #fix this
-                #print(game.get_state())
-                input()
-            if self.verbose or self.does_render:
+
+            if self.does_render:
+                print("Press enter on the rendered window to continue. Press q to exit")
+                self.renderEngine.wait() # consumes for the world to see.
+            elif self.verbose:
+                print(game.get_state())
+                print("Press enter to continue. Press ctrl+c to exit.")
                 input()
             turn += 1
         winner = game.getWinner()
         print('Winner:', winner)
         return game.getWinner()
 
-    def start(self, doRender=False, savePath="", maxTurns=200):
-        # Retrieves the port and verbose flag from arguments
+    def start(self, doRender=False, savePath=""):
+        #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
         parser.add_argument('--replaysavepath', type=str, help='If selected, outputs the game state to a file.', nargs='?', const=None)
@@ -117,7 +120,7 @@ class GameEngine:
         for player in range(self.NUMPLAYERS):
             self.__connectNextPlayer()
         if self.does_render:
-            self.renderEngine = RenderingEngine(self.renderFactory)
+            self.renderEngine = RenderingEngine(self.renderFactory, self.map)
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.close()

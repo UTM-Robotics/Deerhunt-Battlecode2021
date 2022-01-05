@@ -2,10 +2,11 @@ class Unit:
     """
     Units are given to players and can interact with the map
     """
-    def __init__(self, x, y):
+    def __init__(self, x, y,unitType, id):
         self.x = x
         self.y = y
-        self.id = -1
+        self.id = id
+        self.unitType = unitType
         self.type = None
 
     def pos_tuple(self):
