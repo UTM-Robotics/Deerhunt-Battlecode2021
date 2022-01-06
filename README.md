@@ -15,11 +15,10 @@ We want to challenge UTM students to program their own AI robots. The competitio
 
 # Battlecode: Merlin
 In this year's game, play as a wizard while at war with another wizard. In this war, the wizards do not fight themselves, they instead fight by controlling their armies to capture the opposing wizard's flag, or bring him to submission by crushing his army.
-Non-technical game manual [https://docs.google.com/document/d/19bud0f0LGRoNQpqPiDY7wX30sR1WyyCcGvAtA3pYjNs/edit]
 
 ## Game Rules
-
-
+[Non-technical game manual](https://github.com/UTM-Robotics/Deerhunt-Battlecode2021/blob/main/guides/Non-technical-manual.pdf)
+[Technical game manual](https://mcss.utmrobotics.com/events/Merlin)
 ## Tech Stack
 
 This game is built with [Python](https://www.python.org/) and [Pygame](https://www.pygame.org/news)
