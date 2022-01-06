@@ -1,7 +1,7 @@
 ## General Testing Guide
 Below is a general guide of how different kinds of testing work. 
 
-The flag server which is run via `python3 ./<server_folder>/server_runner.py localhost <port> [--verbose] [--render]` where the verbose flag enables the printing of the map in json form, and the render flag renders the game using pygame.
+The flag server which is run via `python3 ./runServer.py localhost <port> [--verbose] [--render]` where the verbose flag enables the printing of the map in json form, and the render flag renders the game using pygame.
 The verbose flag also ensures that once clients have computed you must press enter in the terminal to see the next tick be computed.
 
 Note, there is a timeout on the server. If you do not connect your clients within the set 10s from eachother, you will have to restart the server.
