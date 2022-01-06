@@ -30,10 +30,10 @@ Note, there is a timeout on the server. If you do not connect your clients withi
 3. Run Server on terminal 1(within root)
    `python3  ./runServer.py 8888` where server is "server" and "mac_os_server".
 
-4. Run Player 1 terminal 2( )
-   `python3  ./runClient.py localhost 8888` In a 
+4. Run Player 1 terminal 2(From Merlin folder)
+   `python3  ./runClient.py localhost 8888 
 
-5. Run Player2 terminal 3(From folder containing desire player2 client)
+5. Run Player2 terminal 3(From Merlin folder)
    `python3  ./runClient.py localhost 8888`
 
 
