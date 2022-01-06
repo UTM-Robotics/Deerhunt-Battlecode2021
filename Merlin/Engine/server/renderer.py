@@ -35,6 +35,7 @@ class RenderingEngine:
         self.units = units
         self.map = gameMap
         self.miscellaneous = miscellaneous
+        print(miscellaneous)
 
     def draw(self):
         pygame.event.pump()
@@ -56,18 +57,31 @@ class RenderingEngine:
         for tile in self.tile_list:
             self.screen.blit(tile[0], tile[1])
         # TODO render units
-
+        self.draw_units()
         # TODO render miscellaneous
-        self.blit_text(self.screen, str(self.miscellaneous))
+        self.draw_text(self.screen, str(self.miscellaneous))
         pygame.display.update()
         pygame.event.wait()
 
-    def blit_text(self, surface, text, color=pygame.Color('black')):
-        font = pygame.font.SysFont(None, 16)
+    def draw_units(self):
+        unit_list = []
+        for unit in self.units.values():
+            img = pygame.transform.scale(self.factory.get_unit_image(unit), (self.tile_size, self.tile_size)
+                )
+            img_rect = img.get_rect()
+            img_rect = img.get_rect()
+            img_rect.x = unit.x * self.tile_size
+            img_rect.y = unit.y * self.tile_size
+            drawn = (img, img_rect)
+            unit_list.append(drawn)
+        for unit in unit_list:
+            self.screen.blit(unit[0], unit[1])
+    def draw_text(self, surface, text, color=pygame.Color('white')):
+        font = pygame.font.SysFont(None, 40)
         words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
         space = font.size(' ')[0]  # The width of a space.
-        max_width, max_height = (200,720)
-        pos = (720, 0)
+        max_width, max_height = (720,720)
+        pos = (300, 400)
         x, y = pos
         for line in words:
             for word in line:
@@ -83,4 +97,6 @@ class RenderingEngine:
 
 class BaseRenderFactory:
     def get_tile_image(self, tile):
+        raise NotImplementedError
+    def get_unit_image(self, unit):
         raise NotImplementedError

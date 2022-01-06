@@ -12,44 +12,28 @@ Previous final competitions hosted by MIT can be found [here](https://www.youtub
 
 We want to challenge UTM students to program their own AI robots. The competition is also open to all levels of programming experience.
 
-## Requirements
 
-### Tooling and Access
-- Tech documentation
-- Game manual
-- Record patches
-- Stats, Replay
-    - Video
-    - Post game stats
-- Standard interfaces
-    - Moves
-    - Standard objects
-    - Setup/Run
-
-### Compatible Deerhunt Infrastructure
-- Server
-    - Crash handling safely
-    - Ports, outputFileName[s]
-- Clients (players)
-    - Capturable player logs
+# Battlecode: Merlin
+In this year's game, play as a wizard while at war with another wizard. In this war, the wizards do not fight themselves, they instead fight by controlling their armies to capture the opposing wizard's flag, or bring him to submission by crushing his army.
+Non-technical game manual [https://docs.google.com/document/d/19bud0f0LGRoNQpqPiDY7wX30sR1WyyCcGvAtA3pYjNs/edit]
 
 ## Game Rules
 
-TBD
 
 ## Tech Stack
 
-This game is built with [Python](https://www.python.org/).
-
-## Testing your Code
-
-TBD
-
-## How to Submit
+This game is built with [Python](https://www.python.org/) and [Pygame](https://www.pygame.org/news)
 
 ### Requirements:
 - Python3
+- pygame 2.1.0
 - Bash shell
+## Testing your Code
+
+To test your code
+## How to Submit
+Submissions will be enabled January 6th and announcements will be made.
+You only need to submit your copy of =grid_player.py= and any new files that you created. You do not need to submit any of the helper classes that are provided to you. Your files should be at the root of the zip. You can achieve this by running the following command wherever your code is:
 
 You do not need to submit any of the helper classes that are provided to you. Your files should be at the root of the zip. You can achieve this by running the following command wherever your code is:
 
