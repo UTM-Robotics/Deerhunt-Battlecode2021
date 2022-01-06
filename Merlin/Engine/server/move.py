@@ -31,8 +31,3 @@ class Move:
         The subclass should implement this
         '''
         pass
-    def makeMove(): #Note that this should take in a game state
-        '''
-        Perform move on the game state
-        The subclass should implement this
-        '''
