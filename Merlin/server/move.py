@@ -77,6 +77,7 @@ class DirectionMove(GameMove):
   def __init__(self, unit, direction, magnitude):
       super().__init__(unit)
       self.direction = direction
+      self.magnitude = magnitude
   
   def __repr__(self):
       '''
