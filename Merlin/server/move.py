@@ -1,10 +1,8 @@
 #Figure out import
 
-from .unit import WorkerUnit
-
 from Engine.server.move import Move
 
-from game.constants import Moves, Units, UPGRADE_COSTS, Direction, MAX_LEVEL
+from game.constants import Moves
 class MerlinMoveFactory:
     def createMove(uid:str, *restInfo):
         '''
@@ -34,18 +32,13 @@ class GameMove(Move):
       The subclass should implement this
       '''
       pass
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      The subclass should implement this
-      '''
 
 
 class AttackMove(GameMove):
   def __init__(self, unit, direction, length):
       super().__init__(unit)
-      self.direction
-      self.length
+      self.direction = direction
+      self.length = length
   
   def __repr__(self):
       '''
@@ -53,11 +46,6 @@ class AttackMove(GameMove):
       '''
       return {'command': Moves.ATTACK, "unit": self.unit, "target": self.target }
 
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      The subclass should implement this
-      '''
 
 class UpgradeMove(GameMove):
   def __init__(self, unit):
@@ -68,11 +56,6 @@ class UpgradeMove(GameMove):
       Returns the serialized form of this move
       '''
       return {'command': Moves.UPGRADE, "unit": self.unit}
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      The subclass should implement this
-      '''
 class DirectionMove(GameMove):
   def __init__(self, unit, direction, magnitude):
       super().__init__(unit)
@@ -85,12 +68,6 @@ class DirectionMove(GameMove):
       '''
       return {'command': Moves.DIRECTION, "unit": self.unit, "direction": self.direction}
 
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      '''
-      pass
-
 class MineMove(GameMove):
     def __init__(self, unit):
         super().__init__(unit)
@@ -101,11 +78,6 @@ class MineMove(GameMove):
         '''
         return {'command': Moves.MINE, "unit": self.unit }
 
-    def makeMove(self, gameState): #Note that this should take in a game state
-        '''
-        Perform move on the game state
-        '''
-        pass
 
 class BuyMove(GameMove):
   def __init__(self, unit, unitType, direction):
@@ -119,10 +91,6 @@ class BuyMove(GameMove):
       '''
       return {'command': Moves.BUY, "unitType": self.unitType, 'direction': self.direction}
 
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      '''
 
 class CaptureMove(GameMove):
   def __init__(self, unit, direction):
@@ -134,10 +102,6 @@ class CaptureMove(GameMove):
       Returns the serialized form of this move
       '''
       return {'command': Moves.CAPTURE, "unit": self.unit, 'direction': self.direction}
-  def makeMove(self, gameState): #Note that this should take in a game state
-      '''
-      Perform move on the game state
-      '''
 
 
 
