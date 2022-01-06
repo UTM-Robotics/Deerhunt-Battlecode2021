@@ -26,7 +26,8 @@ This game is built with [Python](https://www.python.org/) and [Pygame](https://w
 ### Requirements:
 - Python3
 - pygame 2.1.0
-- Bash shell
+- Bash Shell for automated testing
+- CMD or bash for manual testing
 ## Testing your Code
 
 To test your code see our [general guide](https://github.com/UTM-Robotics/Deerhunt-Battlecode2021/blob/main/guides/General_Guide.md)
@@ -36,7 +37,7 @@ You only need to submit your copy of =grid_player.py= and any new files that you
 
 You do not need to submit any of the helper classes that are provided to you. Your files should be at the root of the zip. You can achieve this by running the following command wherever your code is:
 
-`some command`
+`some command that will come soon`
 
 To verify that you've zipped correctly, you can either =vim submission.zip= to ensure there are no folder only files or simply unzip your submissions and confirm that no folders are created.
 
