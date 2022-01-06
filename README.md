@@ -29,7 +29,7 @@ This game is built with [Python](https://www.python.org/) and [Pygame](https://w
 - Bash shell
 ## Testing your Code
 
-To test your code
+To test your code see our [general guide][https://github.com/UTM-Robotics/Deerhunt-Battlecode2021/blob/main/guides/General_Guide.md]
 ## How to Submit
 Submissions will be enabled January 6th and announcements will be made.
 You only need to submit your copy of =grid_player.py= and any new files that you created. You do not need to submit any of the helper classes that are provided to you. Your files should be at the root of the zip. You can achieve this by running the following command wherever your code is:
