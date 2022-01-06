@@ -191,7 +191,10 @@ class MerlinGridGame(GridGame):
                 else:
                     return False
         return False
-
+    def get_overridden_state(self):
+        # TODO this probably should be changed to misc
+        misc = {**self.resources, "Player 1 Flag": self.p1_flag, "Player 2 Flag":self.p2_flag}
+        return self.grid, self.all_units, misc
 
     def get_direction_change(self, direction):
         x = 0
@@ -332,6 +335,14 @@ class MerlinGridGame(GridGame):
 
     #tick is run each turn and updates the game state
     def tick(self):
+        #Gets the moves from each player and executes.
+        if self.turns % 2 == 0:
+            self.tick_player(self.p1_conn, self.p1_units,
+                         self.p2_units, self.p1_conn.name, self.turns)
+        else:
+            self.tick_player(self.p2_conn, self.p2_units,
+                            self.p1_units, self.p2_conn.name, self.turns)
+
         # manage each units actions that change game state overall.
         #Checks if any units are duplicating, if they are increment the status and create a new unit if they are complete
         for unit in self.all_units.values():
@@ -352,16 +363,6 @@ class MerlinGridGame(GridGame):
                     unit.mining_status = -1
                     tile = self.get_tile(unit)
                     self.resources[player_name] += MINING_REWARDS[str(tile)]
-
-        #Gets the moves from each player and executes.
-        if self.turns % 2 == 0:
-            self.tick_player(self.p1_conn, self.p1_units,
-                         self.p2_units, self.p1_conn.name, self.turns)
-            #self.print_map(self.p1_conn.name, self.p2_conn.name)
-        else:
-            self.tick_player(self.p2_conn, self.p2_units,
-                            self.p1_units, self.p2_conn.name, self.turns)
-            #self.print_map(self.p1_conn.name, self.p2_conn.name)
         self.turns += 1
 
 class MerlinGridGameFactory(GridGameFactory):

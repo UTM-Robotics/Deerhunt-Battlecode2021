@@ -1,11 +1,10 @@
 ## General Testing Guide
-Below is a general guide of how different kinds of testing work. Please **Read the guide for your OS**. The supported OS' are **Windows, Ubuntu, and MacOs**. You will find their respective guides **in the `./guides` folder**.
+Below is a general guide of how different kinds of testing work. 
 
-The flag server which is run via `python3 ./<server_folder>/server_runner.py localhost <port> [--verbose]` where the verbose flag enables the printing of the map.
+The flag server which is run via `python3 ./<server_folder>/server_runner.py localhost <port> [--verbose] [--render]` where the verbose flag enables the printing of the map in json form, and the render flag renders the game using pygame.
 The verbose flag also ensures that once clients have computed you must press enter in the terminal to see the next tick be computed.
 
-Note, there is a timeout on the server. If you do not connect your clients within the 
-7 seconds from eachother, you will have to restart the server.
+Note, there is a timeout on the server. If you do not connect your clients within the set 10s from eachother, you will have to restart the server.
 
 ### Local Testing - Automated
    Enclosed is a `run.sh` file. This script automatically will run the server
@@ -26,13 +25,16 @@ Note, there is a timeout on the server. If you do not connect your clients withi
 #### General Manual Steps
 1. Open 3 terminals (Windows users ensure use Ubuntu installed WSL)
 
-2. Go to project root
-
+2. Go to project "Merlin" folder.
+   `cd Merlin` from project root
 3. Run Server on terminal 1(within root)
-   `python3  ./<server>/server_runner.py 8888` where server is "server" and "mac_os_server".
+   `python3  ./runServer.py 8888` where server is "server" and "mac_os_server".
 
-4. Run Player 1 terminal 2(From folder containing desire player1 client)
-   `python3  ./client_runner.py localhost 8888` In a 
+4. Run Player 1 terminal 2(From Merlin folder)
+   `python3  ./runClient.py localhost 8888 
 
-5. Run Player2 terminal 3(From folder containing desire player2 client)
-   `python3  ./client_runner.py localhost 8888`
+5. Run Player2 terminal 3(From Merlin folder)
+   `python3  ./runClient.py localhost 8888`
+
+
+### 

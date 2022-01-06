@@ -1,6 +1,7 @@
 import pygame
 from Engine.server.renderer import BaseRenderFactory
 from .tile import *
+from .unit import *
 class MerlinRenderFactory(BaseRenderFactory):
     def get_tile_image(self, tile):
         # Load images
@@ -19,4 +20,19 @@ class MerlinRenderFactory(BaseRenderFactory):
             img = pygame.image.load("game/assets/wall.png")
         else:
             raise Exception("Invalid tile type:", tile)
+        return img
+
+    def get_unit_image(self, unit):
+        # Load images
+        img = None
+        if isinstance(unit, WorkerUnit):
+            img = pygame.image.load("game/assets/miner_1.webp")
+        elif isinstance(unit, ScoutUnit):
+            img = pygame.image.load("game/assets/scout_1.png")
+        elif isinstance(unit, KnightUnit):
+            img = pygame.image.load("game/assets/knight_1.png")
+        elif isinstance(unit, ArcherUnit):
+            img = pygame.image.load("game/assets/archer_1.png")
+        else:
+            raise Exception("Invalid unit type:", unit)
         return img

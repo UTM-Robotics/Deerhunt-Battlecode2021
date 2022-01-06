@@ -19,8 +19,9 @@ class GridGame():
         self.p1_units = {}
         self.p2_units = {}
         self.resources = {
-            self.p1_conn.name: 0,
-            self.p2_conn.name: 0} #TODO resources must be removed?
+            self.p1_conn.name: 100,
+            self.p2_conn.name: 100}
+        #TODO resources must be removed?
         #Creates 2 copies of the map, one reversed of the other
         top = gamemap.map
         bottom = deepcopy(top[:-1])
@@ -88,8 +89,7 @@ class GridGame():
         print('MAP:{}'.format(j))
 
     def get_state(self):
-        # TODO this probably should be changed to misc
-        return self.grid, self.all_units, self.resources
+        return self.grid, self.all_units, {**self.resources}
 
     def verify_move(self, k, v, player_state, player_resources, name, enemy_units, **args):
         raise NotImplementedError

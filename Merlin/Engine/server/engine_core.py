@@ -75,13 +75,13 @@ class GameEngine:
         turn = 0
         print('Game starting...')
         if self.does_render:
-            current_map, current_units, current_misc = game.get_state()
+            current_map, current_units, current_misc = game.get_overridden_state()
             self.renderEngine.update(current_map, current_units, current_misc)
             self.renderEngine.draw()
         while game.getWinner() == None: # TODO: Raise notimplementedError
             print("Turn:", turn)
             game.tick()
-            current_map, current_units, current_misc = game.get_state()
+            current_map, current_units, current_misc = game.get_overridden_state()
             if self.does_render:
                 self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
