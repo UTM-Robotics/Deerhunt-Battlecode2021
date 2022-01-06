@@ -123,5 +123,5 @@ class GameEngine:
             self.renderEngine = RenderingEngine(self.renderFactory, self.map)
         self.__runGameLoop(self.map)
         for connection in self.connections:
-            connection.close()
+            connection.sock.close()
         self.sock.close()
