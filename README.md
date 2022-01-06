@@ -18,7 +18,7 @@ In this year's game, play as a wizard while at war with another wizard. In this 
 
 ## Game Rules
 [Non-technical game manual](https://github.com/UTM-Robotics/Deerhunt-Battlecode2021/blob/main/guides/Non-technical-manual.pdf)
-[Technical game manual](https://mcss.utmrobotics.com/events/Merlin)
+[Technical game manual](https://mcss.utmrobotics.com/events/Battlecode)
 ## Tech Stack
 
 This game is built with [Python](https://www.python.org/) and [Pygame](https://www.pygame.org/news)
