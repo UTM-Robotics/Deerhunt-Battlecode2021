@@ -281,7 +281,6 @@ class MerlinGridGame(GridGame):
             return p1Name if self.resources[p1Name] >= self.resources[p2Name] else p2Name
         
         p1FlagTile = self.grid[self.p1_flag['y']][self.p1_flag['x']]
-        print(self.p2_flag)
 
         p2FlagTile = self.grid[self.p2_flag['y']][self.p2_flag['x']]
         if repr(p1FlagTile) == Tiles.BASE:
