@@ -39,7 +39,7 @@ class GridGame():
 
     def get_tile(self, unit:Unit):
         x,y = unit.position()
-        return self.grid[x][y]
+        return self.grid[y][x]
 
     def move_unit(self, x, y, unit):
         del self.all_units['{},{}'.format(x, y)]
@@ -52,6 +52,7 @@ class GridGame():
         return '{},{}'.format(x, y) in self.all_units
 
     def del_unit(self, x, y):
+        unit = self.all_units['{},{}'.format(x, y)]
         del self.all_units['{},{}'.format(x, y)]
 
     # returns the player to which the unit is owned by.

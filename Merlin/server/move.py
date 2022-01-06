@@ -42,9 +42,10 @@ class GameMove(Move):
 
 
 class AttackMove(GameMove):
-  def __init__(self, unit, target):
+  def __init__(self, unit, direction, length):
       super().__init__(unit)
-      self.target = target
+      self.direction
+      self.length
   
   def __repr__(self):
       '''
@@ -73,7 +74,7 @@ class UpgradeMove(GameMove):
       The subclass should implement this
       '''
 class DirectionMove(GameMove):
-  def __init__(self, unit, direction):
+  def __init__(self, unit, direction, magnitude):
       super().__init__(unit)
       self.direction = direction
   
