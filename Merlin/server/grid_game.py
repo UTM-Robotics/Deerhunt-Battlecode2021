@@ -10,17 +10,17 @@ from Engine.server.maps import Map
 from .unit import *
 from .tile import BaseTile
 from .move import *
-from game.constants import Units, Direction, MAX_ATTACK_RANGE, MINING_REWARDS, TURNS_PER_PLAYER
+from game.constants import Units, Direction, MAX_ATTACK_RANGE, MINING_REWARDS, TURNS_PER_PLAYER, MAX_MOVEMENT_SPEED
 
-def direction_to_coord(x,y, direction):
+def direction_to_coord(x,y, direction, magnitude = 1):
     if direction == Direction.DOWN:
-        return (x, y + 1)
+        return (x, y + magnitude)
     if direction == Direction.UP:
-        return (x, y - 1)
+        return (x, y - magnitude)
     if direction == Direction.LEFT:
-        return (x - 1, y)
+        return (x - magnitude, y)
     if direction == Direction.RIGHT:
-        return (x + 1, y)
+        return (x + magnitude, y)
     return None, None
 
 def is_within_map(map,x,y):
@@ -31,6 +31,25 @@ def is_conflicting(x,y,all_units):
 
 def is_straight_line(x,y,targetX,targetY):
     return bool(targetX - x != 0) != bool(targetY - y != 0)
+
+
+def is_free_path(x,y,targetX,targetY,grid,allUnits):
+    #assumes straight line
+    dx = targetX - x 
+    dy = targetY - y
+
+    newX = x 
+    newY = y
+    while (dx != 0 and dy != 0):
+        newX = newX + (-1 if dx < 0 else 1)
+        newY = newY + (-1 if dy < 0 else 1)
+
+        if repr(grid[newY][newX]) != Tiles.GROUND or is_conflicting(newX,newY,allUnits):
+            return False
+        dx = dx + (1 if dx < 0 else -1)
+        dy = dy + (1 if dy < 0 else -1)
+    return True
+
 
 def can_reach(x,y,targetX,targetY,unitType):
     if not is_straight_line(x,y,targetX,targetY):
@@ -106,7 +125,7 @@ class MerlinGridGame(GridGame):
                     print('ERROR: {} cannot act while mining'.format(k))
                     return False
                 
-                if repr(self.grid[unit.x][unit.y]) in Tiles._value2member_map_:
+                if repr(self.grid[unit.y][unit.x]) in Tiles._value2member_map_:
                     moved_units.add(unit.id)
                     return True
                 else:
@@ -143,10 +162,12 @@ class MerlinGridGame(GridGame):
                 else:
                     return False
             elif isinstance(v, DirectionMove):
-                newX, newY = direction_to_coord(unit.x,unit.y,v.direction)
-                if not is_within_map(self.grid,newX,newY):
+                if (v.magnitude > MAX_MOVEMENT_SPEED[unit.type]):
                     return False
-                if repr(self.grid[newX][newY]) != Tiles.WALL and not is_conflicting(newX,newY, self.all_units):
+                newX, newY = direction_to_coord(unit.x,unit.y,v.direction, v.magnitude)
+                if not is_within_map(self.grid,newX,newY) or not is_straight_line(unit.x, unit.y, newX, newY):
+                    return False
+                if is_free_path(unit.x,unit.y,newX,newY,self.grid,self.all_units):
                     moved_units.add(unit.id)
                     return True
                 else:
@@ -220,7 +241,7 @@ class MerlinGridGame(GridGame):
             unit.start_duplication(v.unitType,DUPLICATION_TIME)
         elif isinstance(v, MineMove):
             x,y = unit.x, unit.y
-            miningType = self.grid[unit.x][unit.y].id
+            miningType = self.grid[unit.y][unit.x].id
             v.mining_status = MINING_TIME
         elif isinstance(v, CaptureMove):
             direction = v.direction

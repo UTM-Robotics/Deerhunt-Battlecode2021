@@ -93,6 +93,13 @@ MAX_ATTACK_RANGE = {
     Units.KNIGHT: 1
 }
 
+MAX_MOVEMENT_SPEED = {
+  Units.ARCHER: 1,
+  Units.WORKER: 1,
+  Units.SCOUT: 1,
+  Units.KNIGHT: 2
+}
+
 MINING_REWARDS = {
     Tiles.GOLD: 75,
     Tiles.SILVER: 50,

@@ -39,7 +39,7 @@ class GridGame():
 
     def get_tile(self, unit:Unit):
         x,y = unit.position()
-        return self.grid[x][y]
+        return self.grid[y][x]
 
     def move_unit(self, x, y, unit):
         del self.all_units['{},{}'.format(x, y)]
