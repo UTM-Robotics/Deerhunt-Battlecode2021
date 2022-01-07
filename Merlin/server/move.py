@@ -67,6 +67,17 @@ class MerlinMoveFactory:
           return UpgradeMove(*restInfo)
         raise Exception("Invalid move id")
 
+def direction_to_enum(dirStr):
+  for dirs in Direction:
+    if dirs.value == dirStr:
+      return dirs
+  raise Exception(f"Invalid direction id: {dirStr}")
+
+def unit_to_enum(unitStr):
+  for unit in Units:
+    if unit.value == unitStr:
+      return unit
+  raise Exception(f"Invalid unit id: {unit}")
 
 class GameMove(Move):
   def __init__(self, unit):
@@ -83,7 +94,7 @@ class GameMove(Move):
 class AttackMove(GameMove):
   def __init__(self, unit, direction, length):
       super().__init__(unit)
-      self.direction = direction
+      self.direction = direction_to_enum(direction)
       self.length = length
   
   def __repr__(self):
@@ -105,7 +116,7 @@ class UpgradeMove(GameMove):
 class DirectionMove(GameMove):
   def __init__(self, unit, direction, magnitude):
       super().__init__(unit)
-      self.direction = direction
+      self.direction = direction_to_enum(direction)
       self.magnitude = magnitude
   
   def __repr__(self):
@@ -128,8 +139,8 @@ class MineMove(GameMove):
 class BuyMove(GameMove):
   def __init__(self, unit, unitType, direction):
       super().__init__(unit)
-      self.unitType = unitType
-      self.direction = direction
+      self.unitType = unit_to_enum(unitType)
+      self.direction = direction_to_enum(direction)
   
   def __repr__(self):
       '''
@@ -141,14 +152,10 @@ class BuyMove(GameMove):
 class CaptureMove(GameMove):
   def __init__(self, unit, direction):
       super().__init__(unit)
-      self.direction = direction
+      self.direction = direction_to_enum(direction)
   
   def __repr__(self):
       '''
       Returns the serialized form of this move
       '''
       return str({'command': Moves.CAPTURE, "unit": self.unit, 'direction': self.direction})
-
-
-
-  
