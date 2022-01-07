@@ -104,11 +104,10 @@ class MerlinGridGame(GridGame):
             return self.p1_flag
 
     def verify_move(self, k:int, v:Move, player_state, player_resources, name, enemy_units, moved_units):
-        
-        if k not in player_state:
+        if str(k) not in player_state:
             print('ERROR: Cannot move enemy unit: {}'.format(k))
             return False
-        unit = player_state[k]
+        unit = player_state[str(k)]
 
         if unit.id in moved_units:
             return False

@@ -1,4 +1,5 @@
 from .tile import TileFactory, IllegalTileException
+from copy import deepcopy
 class Map:
     """
     # 2D array of tile objects
@@ -13,7 +14,13 @@ class Map:
         self.tileFactory = tileFactory
         self.map = []
         self.deserialize()
-
+    def print_map(self):
+        display = deepcopy(self.map)
+        #Prints each row
+        display = [list(map(str, r)) for r in display]
+        for row in display:
+            print(''.join(row))
+        print(".")
     def deserialize(self):
         """
         deserializes the map object from the human readable .map file to its state in the game.

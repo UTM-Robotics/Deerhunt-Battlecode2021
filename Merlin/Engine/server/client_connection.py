@@ -41,13 +41,15 @@ class ClientConnection:
             return self.moveFactory.createMove(id, body)
         except Exception as e:
             #Happens if not enough data is send in body.
-            print(e) #TODO: REMOVE
-            print(f"Move creation failed: {body}")
-            raise Exception(f"Invalid move data: {str(body)}")
+            if self.verbose:
+                print(e)
+                print(f"Creation failed: Invalid move data: {str(body)}")
+            return None
+
 
     #filter_fog_of_war updates what each player can see on the board given each units vision
     def filter_fog_of_war(self, current, opponent):
-        #Coppies the opponents units and filters through them
+        #Copies the opponents units and filters through them
         ret = copy.deepcopy(opponent)
         for o_id, o_unit in list(ret.items()):
             should_include = False
@@ -89,11 +91,17 @@ class ClientConnection:
 
             j = json.loads(response)
             #Parse to commands to unit moves and print them
-            moves = [(v[1], self.create_move(v[0], v)) for v in j]
+            moves = []
+            for command in j:
+                move = self.create_move(command[0], command)
+                if move:
+                    moves.append((command[1], move))
+
+            #moves = [(v[1], self.create_move(v[0], v)) for v in j]
             # k is unit id
             # v is move arguments
             if self.verbose:
-                print(self.name, 'moves:', moves)
+                print(self.name, 'moveset:', moves)
             return moves
         except Exception as e:
             if self.verbose:

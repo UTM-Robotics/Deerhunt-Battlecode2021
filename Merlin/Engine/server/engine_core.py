@@ -120,6 +120,7 @@ class GameEngine:
             self.__connectNextPlayer()
         if self.does_render:
             self.renderEngine = RenderingEngine(self.renderFactory, self.map)
+        self.map.print_map()
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.sock.close()
