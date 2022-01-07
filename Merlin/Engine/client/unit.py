@@ -1,12 +1,12 @@
-from .move import Move
 
 class Unit:
     def __init__(self, attr: dict) -> None:
         """
         Initialize a new Unit.
         """
+        print("attr", attr)
         self.attr = attr
-        self.type = attr['type']
+        self.type = attr['unitType']
         self.x = attr['x']
         self.y = attr['y']
         self.id = attr['id']
@@ -31,19 +31,6 @@ class Unit:
             return 'LEFT'
         elif self.x < pos[0]:
             return 'RIGHT'
-
-    def move(self, *directions: (str)) -> Move:
-        """
-        Returns a Move for this Unit using the given <*directions>.
-        """
-        return Move(self.id, *directions)
-
-    def move_towards(self, dest):
-        """
-        Return a Move for this Unit towards <dest>.
-        """
-        direction = self.direction_to(dest)
-        return Move(self.id, direction)
 
     def nearby_enemies_by_distance(self, enemy_units: 'Units'):
         """

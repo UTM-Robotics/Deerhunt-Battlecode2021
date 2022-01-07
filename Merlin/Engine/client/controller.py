@@ -28,14 +28,15 @@ class NetworkedController(Controller):
         try:
             size = int(self.safe_recv(10).decode())
             response = self.safe_recv(size).decode()
-
             js = json.loads(response)
             parsedData = self.decodeDataFactory.decode(js)
-            moves = self.player.tick(**parsedData)
+            moves = []
+            try:
+                moves = self.player.tick(**parsedData)
+            except Exception as e:
+                print("Error in client move generation, sending []")
             data = self.encodeDataFactory.encode(moves)
-
             body = json.dumps(data).encode()
-
             self.conn.sendall('{:10}'.format(len(body)).encode())
             self.conn.sendall(body)
 

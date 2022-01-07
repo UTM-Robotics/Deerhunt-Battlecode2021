@@ -1,9 +1,8 @@
-from .move import Move
+from game.constants import Direction
 from game.constants import Tiles, Moves
 from Engine.client.unit import Unit
 
-
-def createAttackMove(unitId, direction, length):
+def createAttackMove(unitId, direction:Direction, length:int):
     '''
     This is a helper function used by the player to ATTACK an enemy unit
 
@@ -13,9 +12,9 @@ def createAttackMove(unitId, direction, length):
     length - how far the unit is attacking, must be less than the unit's MAX_ATTACK_RANGE (game.constants line 89)
     '''
 
-    return (Moves.ATTACK, unitId, direction, length)
+    return (Moves.ATTACK, unitId, direction.value, length)
 
-def createUpgradeMove(unitId):
+def createUpgradeMove(unitId:int):
     '''
     This is a helper function used by the player to UPGRADE a unit
 
@@ -24,7 +23,7 @@ def createUpgradeMove(unitId):
     '''
     return (Moves.UPGRADE, unitId)
 
-def createDirectionMove(unitId, direction, magnitude):
+def createDirectionMove(unitId:int, direction:Direction, magnitude:int):
     '''
     This is a helper function used by the player to MOVE a unit
 
@@ -34,9 +33,9 @@ def createDirectionMove(unitId, direction, magnitude):
     length - how far the unit is moving, must be less than the unit's MAX_MOVEMENT_SPEED (game.constants line 96)
     '''
 
-    return (Moves.DIRECTION, unitId, direction, magnitude)
+    return (Moves.DIRECTION, unitId, direction.value, magnitude)
 
-def createMineMove(unitId):
+def createMineMove(unitId:int):
     '''
     This is a helper function used by the player to MINE a resource, NOTE: Only workers can mine! Must be on top of the resource to mine
 
@@ -46,7 +45,7 @@ def createMineMove(unitId):
 
     return (Moves.MINE, unitId)
 
-def createBuyMove(unitId, unitType, direction):
+def createBuyMove(unitId:int, unitType:int, direction:Direction):
     '''
     This is a helper function used by the player to BUY a new unit, NOTE: Only workers can buy units!
 
@@ -57,7 +56,7 @@ def createBuyMove(unitId, unitType, direction):
 
     return (Moves.BUY,unitId, unitType, direction)
 
-def createCaptureMove(unitId, direction):
+def createCaptureMove(unitId:int, direction:Direction):
     '''
     This is a helper function used by the player to CAPTURE a flag, NOTE: Only Scouts can capture flags! Must be beside the flag to capture
 
@@ -182,13 +181,14 @@ class Units:
             all_units_ids.append(id)
         return all_units_ids
 
-    def get_all_unit_of_type(self, type: str) -> [Unit]:
+    def get_all_unit_of_type(self, unitType: int) -> [Unit]:
         """
         Returns a list of unit objects of a given type.
         """
         all_units = []
         for id in self.units:
-            if self.units[id].type == type:
+            print("unit type:" ,self.units[id].type)
+            if self.units[id].type == unitType.value:
                 all_units.append(self.units[id])
         return all_units
 

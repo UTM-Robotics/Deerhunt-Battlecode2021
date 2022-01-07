@@ -4,22 +4,27 @@ from Engine.server.move import Move
 
 from game.constants import Moves
 class MerlinMoveFactory:
-    def createMove(uid:str, *restInfo):
+    def createMove(self, moveid:int, *allInfo):
         '''
         Deserializes move, this is the factory used in client_connection.py 
         '''
-        if uid == Moves.ATTACK:
-          return AttackMove(*restInfo)
-        elif uid == Moves.BUY:
-          return BuyMove(*restInfo)
-        elif uid == Moves.CAPTURE:
-          return CaptureMove(*restInfo)
-        elif uid == Moves.DIRECTION:
-          return DirectionMove(*restInfo)
-        elif uid == Moves.MINE:
-          return MineMove(*restInfo)
-        elif uid == Moves.UPGRADE:
-          return UpgradeMove(*restInfo)
+        valids = [move.value for move in Moves]
+        if not moveid in valids:
+          raise Exception(f"Invalid move id: {moveid}")
+
+        allInfo = allInfo[1:]
+        if moveid == Moves.ATTACK.value:
+          return AttackMove(*allInfo)
+        elif moveid == Moves.BUY:
+          return BuyMove(*allInfo)
+        elif moveid == Moves.CAPTURE:
+          return CaptureMove(*allInfo)
+        elif moveid == Moves.DIRECTION:
+          return DirectionMove(*allInfo)
+        elif moveid == Moves.MINE:
+          return MineMove(*allInfo)
+        elif moveid == Moves.UPGRADE:
+          return UpgradeMove(*allInfo)
 
 
 class GameMove(Move):
