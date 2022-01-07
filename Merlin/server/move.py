@@ -2,23 +2,63 @@
 
 from Engine.server.move import Move
 
-from game.constants import Moves
+from game.constants import Moves, Direction, Units
 class MerlinMoveFactory:
     def createMove(uid:str, *restInfo):
         '''
         Deserializes move, this is the factory used in client_connection.py 
         '''
         if uid == Moves.ATTACK:
+          if len(restInfo) != 3:
+            raise Exception
+          
+          direction = restInfo[1]
+          magnitude = restInfo[2]
+          if direction not in Direction._value2member_map_ or magnitude <= 0:
+            raise Exception
+          
           return AttackMove(*restInfo)
         elif uid == Moves.BUY:
+          if len(restInfo) != 3:
+            raise Exception
+  
+          unitType = restInfo[1]
+          direction = restInfo[2]
+
+          if unitType not in Units._value2member_map_ or direction not in Direction._value2member_map_:
+            raise Exception
+
           return BuyMove(*restInfo)
         elif uid == Moves.CAPTURE:
+          if len(restInfo) != 2:
+            raise Exception
+          
+          direction = restInfo[1]
+
+          if direction not in Direction._value2member_map_:
+            raise Exception
+
           return CaptureMove(*restInfo)
         elif uid == Moves.DIRECTION:
+
+          if len(restInfo) != 3:
+            raise Exception
+          
+          direction = restInfo[1]
+          magnitude = restInfo[2]
+          if direction not in Direction._value2member_map_ or magnitude <= 0:
+            raise Exception
+
           return DirectionMove(*restInfo)
         elif uid == Moves.MINE:
+          if len(restInfo) != 1:
+            raise Exception
+
           return MineMove(*restInfo)
         elif uid == Moves.UPGRADE:
+          if len(restInfo) != 1:
+            raise Exception
+
           return UpgradeMove(*restInfo)
 
 
