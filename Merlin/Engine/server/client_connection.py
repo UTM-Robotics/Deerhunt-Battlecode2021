@@ -79,15 +79,12 @@ class ClientConnection:
                 'turns_left'  : turns,
                 **misc
             }
-
             data = json.dumps(d).encode()
             self.sock.sendall('{:10}'.format(len(data)).encode())
             self.sock.sendall(data)
             #Retrieve the response and print the current map before the move
             size = int(self.sock.recv(10).decode())
             response = self.sock.recv(size).decode()
-            if self.verbose:
-                self.print_map(d, game_state)
 
             j = json.loads(response)
             #Parse to commands to unit moves and print them
@@ -101,6 +98,7 @@ class ClientConnection:
             # k is unit id
             # v is move arguments
             if self.verbose:
+                self.print_map(d, game_state)
                 print(self.name, 'moveset:', moves)
             return moves
         except Exception as e:

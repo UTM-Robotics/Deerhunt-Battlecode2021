@@ -34,7 +34,9 @@ class NetworkedController(Controller):
             try:
                 moves = self.player.tick(**parsedData)
             except Exception as e:
+                
                 print("Error in client move generation, sending []")
+                print("Error was:", e)
             data = self.encodeDataFactory.encode(moves)
             body = json.dumps(data).encode()
             self.conn.sendall('{:10}'.format(len(body)).encode())

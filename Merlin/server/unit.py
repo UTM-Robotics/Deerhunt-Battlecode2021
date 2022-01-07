@@ -22,7 +22,7 @@ class UnitFactory():
         elif uid == Units.ARCHER:
             unit = ArcherUnit(*restInfo, self.id_count)
         else:
-            return None
+            raise Exception(f"Error duplicating into invalid unit uid: {uid}")
         self.id_count += 1
         return unit
 
@@ -63,7 +63,7 @@ class WorkerUnit(GameUnit):
 
     def start_duplication(self, duplicating_to_type, duplication_time):
         self.duplicating = True
-        self.duplicating_to_type = duplicating_to_type
+        self.duplicating_to = duplicating_to_type
         self.duplication_time = duplication_time
 
     def finish_duplicating(self):

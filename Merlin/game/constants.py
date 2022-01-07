@@ -25,7 +25,7 @@ class Tiles():
     BASE = 'B' # A team's base
 
 # Direction holds string values for each cardinal direction on the board
-class Direction(Enum):
+class Direction(str, Enum):
     UP = 'UP'
     DOWN = 'DOWN'
     LEFT = 'LEFT'

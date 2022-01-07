@@ -54,7 +54,7 @@ def createBuyMove(unitId:int, unitType:int, direction:Direction):
     direction - The direction to place the new unit in, must be one of the values from the Direction enum (game.constants line 29)
     '''
 
-    return (Moves.BUY,unitId, unitType, direction)
+    return (Moves.BUY,unitId, unitType.value, direction.value)
 
 def createCaptureMove(unitId:int, direction:Direction):
     '''
@@ -65,7 +65,7 @@ def createCaptureMove(unitId:int, direction:Direction):
     direction - The direction to capture in, must be one of the values from the Direction enum (game.constants line 29)
     '''
 
-    return (Moves.CAPTURE, unitId, direction)
+    return (Moves.CAPTURE, unitId, direction.value)
 
 
 class Map:
@@ -128,8 +128,42 @@ class Map:
                 so_far = dist
         return result
 
+    def is_tile_type(self, col:int ,row:int, tileType:Tiles):
+        return self.grid[row][col].upper() == tileType
+
+    def find_all_tiles_of_type(self, tileType:Tiles) -> [(int, int)]:
+        """
+        Returns the (x, y) coordinates for all resource nodes.
+        """
+        locations = []
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[row])):
+                if self.is_tile_type(col, row, tileType):
+                    locations.append((col, row))
+        
+        return locations
+
+    def closest_tile_of_type(self, unit: Unit, tileType) -> (int, int):
+        """
+        Returns the coordinates of the closest tile to <unit>.
+        """
+        locations = self.find_all_tiles_of_type(tileType)
+        c, r = unit.position()
+        result = None
+        so_far = 999999
+        for (c_2, r_2) in locations:
+            dc = c_2-c
+            dr = r_2-r
+            dist = abs(dc) + abs(dr)
+            if dist < so_far:
+                result = (c_2, r_2)
+                so_far = dist
+        return result
+
     def bfs(self, start: (int, int), dest: (int, int)) -> [(int, int)]:
         """(Map, (int, int), (int, int)) -> [(int, int)]
+
+        # tuples are row, col , row,col
         Finds the shortest path from <start> to <dest>.
         Returns a path with a list of coordinates starting with
         <start> to <dest>.
@@ -141,18 +175,15 @@ class Map:
                 not (0 < start[0] < len(graph[0])-1
                      and 0 < start[1] < len(graph)-1):
             return None
-
         while queue:
             path = queue.pop(0)
             node = path[-1]
             r = node[1]
             c = node[0]
-
             if node == dest:
                 return path
             for adj in ((c+1, r), (c-1, r), (c, r+1), (c, r-1)):
-                if (graph[adj[1]][adj[0]] == ' ' or
-                        graph[adj[1]][adj[0]] == 'R') and adj not in vis:
+                if (graph[adj[1]][adj[0]]  == 'X') and adj not in vis:
                     queue.append(path + [adj])
                     vis.add(adj)
 
@@ -187,7 +218,6 @@ class Units:
         """
         all_units = []
         for id in self.units:
-            print("unit type:" ,self.units[id].type)
             if self.units[id].type == unitType.value:
                 all_units.append(self.units[id])
         return all_units
@@ -211,3 +241,6 @@ def coordinate_from_direction(x: int, y: int, direction: str) -> (int, int):
         return (x, y-1)
     if direction == 'DOWN':
         return (x, y+1)
+
+def get_flag_pos(flag):
+    return flag['x'], flag['y']

@@ -4,7 +4,6 @@ class Unit:
         """
         Initialize a new Unit.
         """
-        print("attr", attr)
         self.attr = attr
         self.type = attr['unitType']
         self.x = attr['x']
@@ -32,7 +31,7 @@ class Unit:
         elif self.x < pos[0]:
             return 'RIGHT'
 
-    def nearby_enemies_by_distance(self, enemy_units: 'Units'):
+    def nearby_enemies_by_distance(self, enemy_units):
         """
         Returns a sorted list of ids and their distances (in a tuple).
         """

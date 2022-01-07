@@ -20,9 +20,9 @@ class RenderingEngine:
     def set_drawing_configuration(self):
         self.cells_y = len(self.map.map)
         self.cells_x = len(self.map.map[0])
-        self.tile_size = min(720/self.cells_x, 720/self.cells_y)
-        self.tile_size_x = min(720/self.cells_x, 720/self.cells_y)
-        self.tile_size_y = min(720/self.cells_x, 720/self.cells_y)
+        self.tile_size = min(920/self.cells_x, 920/self.cells_y)
+        self.tile_size_x = min(920/self.cells_x, 920/self.cells_y)
+        self.tile_size_y = min(920/self.cells_x, 920/self.cells_y)
         self.grid_bias = 0
 
     def wait(self):
@@ -46,6 +46,7 @@ class RenderingEngine:
 
     def draw(self):
         # TODO render units
+        self.screen.fill(pygame.Color("black"))
         self.draw_map()
         self.draw_units()
         # TODO render miscellaneous
