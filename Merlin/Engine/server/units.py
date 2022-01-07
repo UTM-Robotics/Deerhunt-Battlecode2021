@@ -7,7 +7,6 @@ class Unit:
         self.y = y
         self.id = id
         self.unitType = unitType
-        self.type = None
 
     def pos_tuple(self):
         return self.x, self.y

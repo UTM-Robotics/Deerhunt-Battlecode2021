@@ -22,20 +22,18 @@ class UnitFactory():
         elif uid == Units.ARCHER:
             unit = ArcherUnit(*restInfo, self.id_count)
         else:
-            return None
+            raise Exception(f"Error duplicating into invalid unit uid: {uid}")
         self.id_count += 1
         return unit
 
 
 class GameUnit(Unit):
-    def __init__(self,x,y,UnitType, id, health, speed):
+    def __init__(self,x,y,unitType, id, health, speed):
         self.health = health
         self.speed = speed
         self.level = 1
         self.has_flag = False
-        super().__init__(x,y,UnitType, id)
-
-        self.unit_type = UnitType
+        super().__init__(x,y,unitType, id)
         self.id = id
         self.x = x
         self.y = y
@@ -44,7 +42,7 @@ class GameUnit(Unit):
         return NotImplemented()
 
     def string(self):
-        return str(self.unit_type.value)
+        return str(self.unitType.value)
 
 
 class WorkerUnit(GameUnit):
@@ -58,14 +56,14 @@ class WorkerUnit(GameUnit):
         self.mining_status = -1
 
     def __repr__(self):
-        return "Worker"
+        return "W"
 
     def is_duplicating(self):
         return self.duplicating
 
     def start_duplication(self, duplicating_to_type, duplication_time):
         self.duplicating = True
-        self.duplicating_to_type = duplicating_to_type
+        self.duplicating_to = duplicating_to_type
         self.duplication_time = duplication_time
 
     def finish_duplicating(self):
@@ -82,7 +80,7 @@ class ScoutUnit(GameUnit):
         super().__init__(x, y, Units.SCOUT, id, 60, 1.3)
 
     def __repr__(self):
-        return "Scout"
+        return "T"
 
     def capture(self):
         self.has_flag = True
@@ -93,7 +91,7 @@ class KnightUnit(GameUnit):
         super().__init__(x, y, Units.KNIGHT, id, 130, 0.7)
 
     def __repr__(self):
-        return "Knight"
+        return "K"
 
 
 class ArcherUnit(GameUnit):
@@ -103,7 +101,7 @@ class ArcherUnit(GameUnit):
 
 
     def __repr__(self):
-        return "Archer"
+        return "A"
 
     def attack():
         pass

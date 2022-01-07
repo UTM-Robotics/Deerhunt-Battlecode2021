@@ -85,12 +85,11 @@ class GameEngine:
             if self.does_render:
                 self.renderEngine.update(current_map, current_units, current_misc)
                 self.renderEngine.draw()
-
-            if self.does_render:
                 print("Press enter on the rendered window to continue. Press q to exit")
                 self.renderEngine.wait() # consumes for the world to see.
             elif self.verbose:
-                print(game.get_state())
+                dis = [list(map(str, r)) for r in current_map.grid]
+                # TODO
                 print("Press enter to continue. Press ctrl+c to exit.")
                 input()
             turn += 1
@@ -98,7 +97,7 @@ class GameEngine:
         print('Winner:', winner)
         return game.getWinner()
 
-    def start(self, doRender=False, savePath=""):
+    def start(self):
         #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
@@ -121,6 +120,7 @@ class GameEngine:
             self.__connectNextPlayer()
         if self.does_render:
             self.renderEngine = RenderingEngine(self.renderFactory, self.map)
+        self.map.print_map()
         self.__runGameLoop(self.map)
         for connection in self.connections:
             connection.sock.close()

@@ -1,8 +1,8 @@
 from enum import Enum
-
+from enum import IntEnum
 TURNS_PER_PLAYER = 200
 #Represents all the valid moves a player can make
-class Moves(Enum):
+class Moves(IntEnum):
     ATTACK = 1
     UPGRADE = 2
     DIRECTION = 3
@@ -11,12 +11,11 @@ class Moves(Enum):
     CAPTURE = 6
 
 #Represents all units in the game
-class Units(Enum):
+class Units(IntEnum):
     WORKER = 1
     SCOUT = 2
     KNIGHT = 3
     ARCHER = 4
-
 class Tiles():
     GROUND = ' ' # A walkable tile
     WALL = 'X' # A non-walkable tile
@@ -26,7 +25,7 @@ class Tiles():
     BASE = 'B' # A team's base
 
 # Direction holds string values for each cardinal direction on the board
-class Direction(Enum):
+class Direction(str, Enum):
     UP = 'UP'
     DOWN = 'DOWN'
     LEFT = 'LEFT'
@@ -106,5 +105,6 @@ MINING_REWARDS = {
     Tiles.COPPER: 25
 }
 
-MINING_TIME = 3 # One of your turns, one of the enemies turns.
-DUPLICATION_TIME = 3  # One of your turns, one of the enemies turns.
+MINING_TIME = 3  # One of the enemies turns ,one of your turns
+BUY_TIME = 3  # One of the enemies turns ,one of your turns
+# These add one because it reduces this number on the turn you cast the move as well.
