@@ -1,4 +1,5 @@
 import json
+from os import X_OK
 from game.constants import ATTACK_DAMAGE, BUY_TIME, MINING_TIME, UPGRADE_COSTS
 from game.constants import Tiles
 from server import *
@@ -63,9 +64,9 @@ def can_reach(x,y,targetX,targetY,unitType):
 class MerlinGridGame(GridGame):
     """
     GridGame is the currently running game, it controls all game state and updates the state each turn with tick.
-    
-    This game is won by a player capturing the other player's flag
-    
+    This game is won by a player capturing the other player's flag, having the most resources at the end of the game, or
+    by killing all the enemy player's units.
+
     """
     def __init__(self, player_one_connection:ClientConnection, player_two_connection:ClientConnection, gamemap:Map):
         super().__init__(player_one_connection, player_two_connection, gamemap)
@@ -193,6 +194,7 @@ class MerlinGridGame(GridGame):
                 else:
                     return False
         return False
+
     def get_overridden_state(self):
         # TODO this probably should be changed to misc
         misc = {**self.resources, "Player 1 Flag": self.p1_flag, "Player 2 Flag":self.p2_flag}
@@ -376,3 +378,18 @@ class MerlinGridGame(GridGame):
 class MerlinGridGameFactory(GridGameFactory):
     def getGame(self, connections, map)->MerlinGridGame:
         return MerlinGridGame(*connections, map)
+
+    def serialize_unit(self, unit:GameUnit):
+        d = {
+            "x": unit.x,
+            "y": unit.y,
+            "health": unit.health,
+            "level": unit.level,
+            "has_flag": unit.has_flag,
+            "id": unit.level,
+            "unitType": unit.unitType.value
+        }
+        return d
+    def deserialize_unit(self, unit:dict):
+        unit["unitType"] = Units(unit["unitType"])
+        return LoadUnit(**unit)

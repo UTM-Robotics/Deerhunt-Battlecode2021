@@ -26,9 +26,23 @@ class UnitFactory():
         self.id_count += 1
         return unit
 
+class LoadUnit(Unit):
+    def __init__(self,x,y,unitType:Units, id, health, level, has_flag):
+        self.health = health
+        self.level = level
+        self.has_flag = has_flag
+        super().__init__(x,y,unitType, id)
+        self.id = id
+        self.x = x
+        self.y = y
 
+    def __repr__(self):
+        return str(self.unitType.value)
+
+    def string(self):
+        return str(self.unitType.value)
 class GameUnit(Unit):
-    def __init__(self,x,y,unitType, id, health, speed):
+    def __init__(self,x,y,unitType:Units, id, health, speed):
         self.health = health
         self.speed = speed
         self.level = 1

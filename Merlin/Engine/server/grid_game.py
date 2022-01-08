@@ -109,3 +109,7 @@ class GridGame():
 class GridGameFactory():
     def getGame(self, connections:List[ClientConnection], map:Map)->GridGame:
         raise NotImplementedError
+    def serialize_unit(self, unit:Unit):
+        raise NotImplementedError
+    def deserialize_unit(self, unit:dict):
+        raise NotImplementedError
