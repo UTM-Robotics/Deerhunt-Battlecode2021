@@ -35,7 +35,6 @@ class GridGame():
         unit.id = self.next_id
         player[str(self.next_id)] = unit
         self.next_id += 1
-    
         self.all_units['{},{}'.format(unit.x, unit.y)] = unit
 
     def get_tile(self, unit:Unit):
@@ -58,7 +57,7 @@ class GridGame():
 
     # returns the player to which the unit is owned by.
     def get_unit_player(self, unit):
-        if unit.id in self.p1_units:
+        if str(unit.id) in self.p1_units.keys():
             return self.p1_units
         else:
             return self.p2_units

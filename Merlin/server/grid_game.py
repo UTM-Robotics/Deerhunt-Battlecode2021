@@ -241,7 +241,7 @@ class MerlinGridGame(GridGame):
             attacked_unit.health -= damage
             if attacked_unit.health <= 0:
                 self.del_unit(attacked_unit.x, attacked_unit.y)
-                del opponent_state[attacked_unit.id]
+                del opponent_state[str(attacked_unit.id)]
         elif isinstance(v, UpgradeMove):
             self.resources[player_name] -= UPGRADE_COSTS[unit.unitType][unit.level]
             unit.level += 1
