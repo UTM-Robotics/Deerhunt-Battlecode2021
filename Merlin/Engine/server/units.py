@@ -1,3 +1,6 @@
+from os import X_OK
+
+
 class Unit:
     """
     Units are given to players and can interact with the map
@@ -19,6 +22,12 @@ class Unit:
             self.x = nx
             self.y = ny
 
+    def serialize(self):
+        raise NotImplementedError
+
+    def deserialize(unit):
+        raise NotImplementedError
+
     def __repr__(self):
-        return NotImplemented()
+        raise NotImplementedError
 
