@@ -127,7 +127,7 @@ class MerlinGridGame(GridGame):
                     print('ERROR: {} cannot act while mining'.format(k))
                     return False
                 
-                if repr(self.grid[unit.y][unit.x]) in Tiles._value2member_map_:
+                if repr(self.grid[unit.y][unit.x]) in [Tiles.GOLD, Tiles.COPPER, Tiles.SILVER]:
                     moved_units.add(unit.id)
                     return True
                 else:
@@ -146,7 +146,7 @@ class MerlinGridGame(GridGame):
                 if newX == None and newY == None:
                     return False
 
-                if is_within_map(self.grid, newX, newY) and self.grid[newY][newX] != Tiles.WALL: #TODO make sure cannot spawn into map
+                if is_within_map(self.grid, newX, newY) and self.grid[newY][newX].id != Tiles.WALL: #TODO make sure cannot spawn into map
                     moved_units.add(unit.id)
                     return True
                 else:
