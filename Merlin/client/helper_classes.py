@@ -1,7 +1,8 @@
 from game.constants import Direction
 from game.constants import Tiles, Moves
+from game.constants import Units as UNITS
 from Engine.client.unit import Unit
-
+from random import randrange
 def createAttackMove(unitId, direction:Direction, length:int):
     '''
     This is a helper function used by the player to ATTACK an enemy unit
@@ -163,7 +164,7 @@ class Map:
     def bfs(self, start: (int, int), dest: (int, int)) -> [(int, int)]:
         """(Map, (int, int), (int, int)) -> [(int, int)]
 
-        # tuples are row, col , row,col
+        ### tuples are col, row , col,row
         Finds the shortest path from <start> to <dest>.
         Returns a path with a list of coordinates starting with
         <start> to <dest>.
@@ -173,7 +174,7 @@ class Map:
         vis = set(start)
         if start == dest or graph[start[1]][start[0]] == 'X' or \
                 not (0 < start[0] < len(graph[0])-1
-                     and 0 < start[1] < len(graph)-1):
+                    and 0 < start[1] < len(graph)-1):
             return None
         while queue:
             path = queue.pop(0)
@@ -183,10 +184,12 @@ class Map:
             if node == dest:
                 return path
             for adj in ((c+1, r), (c-1, r), (c, r+1), (c, r-1)):
-                if (graph[adj[1]][adj[0]]  == 'X') and adj not in vis:
+                if is_within_map( graph, adj[0],adj[1]) and (graph[adj[1]][adj[0]]  != 'X') and adj not in vis:
                     queue.append(path + [adj])
                     vis.add(adj)
 
+def is_within_map(map,x,y):
+    return 0 <= x and x < len(map[0]) and 0 <= y and y < len(map)
 
 class Units:
     def __init__(self, units: dict) -> None:
@@ -222,25 +225,54 @@ class Units:
                 all_units.append(self.units[id])
         return all_units
 
+def direction_to(unit, pos:(int,int)):
+    """
+    Returns a required direction from a unit to <pos> (x,y).
+    """
+    if unit.y < pos[1]:
+        return Direction.DOWN
+    elif unit.y > pos[1]:
+        return Direction.UP
+    elif unit.x > pos[0]:
+        return Direction.LEFT
+    elif unit.x < pos[0]:
+        return Direction.RIGHT
 
-def coordinate_from_direction(x: int, y: int, direction: str) -> (int, int):
+def does_have_flag(unit:Unit):
+    if unit.type != UNITS.SCOUT:
+        return False
+    return unit.attr["has_flag"]
+
+
+def coordinate_from_direction(x: int, y: int, direction: Direction) -> (int, int):
     """
     Returns the resulting (x, y) coordinates after moving in a
     direction> from <x> and <y>.
     Acceptable directions:
-        'LEFT'
-        'RIGHT'
-        'UP'
-        'DOWN'
+        Direction.LEFT
+        Direction.RIGHT
+        Direction.UP
+        Direction.DOWN
     """
-    if direction == 'LEFT':
+    if direction == Direction.LEFT:
         return (x-1, y)
-    if direction == 'RIGHT':
+    if direction == Direction.RIGHT:
         return (x+1, y)
-    if direction == 'UP':
+    if direction == Direction.UP:
         return (x, y-1)
-    if direction == 'DOWN':
+    if direction == Direction.DOWN:
         return (x, y+1)
+
+def get_random_direction()-> Direction:
+    rand = randrange(4)
+    if rand == 0:
+        return Direction.UP
+    elif rand == 1:
+        return Direction.DOWN
+    elif rand == 2:
+        return Direction.LEFT
+    else:
+        return Direction.RIGHT
 
 def get_flag_pos(flag):
     return flag['x'], flag['y']

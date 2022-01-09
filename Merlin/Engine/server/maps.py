@@ -71,6 +71,7 @@ class Map:
         display = deepcopy(self.map)
         #Prints each row
         display = [list(map(str, r)) for r in display]
-        for row in display:
+        for row in display[:-1]:
             output+=''.join(row) + "\n"
+        output += ''.join(display[-1])
         return output

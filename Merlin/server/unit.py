@@ -7,20 +7,19 @@ class UnitFactory():
 
     id_count = 0
 
-    def createUnit(self,uid, *restInfo):
+    def createUnit(self,uid, x,y):
         '''
         Deserializes unit, this is the factory used to create new units
         '''
-
         unit = None
         if uid == Units.WORKER:
-            unit = WorkerUnit(*restInfo, self.id_count)
+            unit = WorkerUnit(x,y, self.id_count)
         elif uid == Units.SCOUT:
-            unit = ScoutUnit(*restInfo, self.id_count)
+            unit = ScoutUnit(x,y, self.id_count)
         elif uid == Units.KNIGHT:
-            unit = KnightUnit(*restInfo, self.id_count)
+            unit = KnightUnit(x,y, self.id_count)
         elif uid == Units.ARCHER:
-            unit = ArcherUnit(*restInfo, self.id_count)
+            unit = ArcherUnit(x,y, self.id_count)
         else:
             raise Exception(f"Error duplicating into invalid unit uid: {uid}")
         self.id_count += 1
@@ -86,12 +85,12 @@ class WorkerUnit(GameUnit):
         self.duplicating = False
     
     def is_mining(self):
-        return self.mining_status > 0
+        return self.mining_status >= 0
 
 class ScoutUnit(GameUnit):
 
     def __init__(self, x, y, id):
-        super().__init__(x, y, Units.SCOUT, id, 60, 1.3)
+        super().__init__(x, y, Units.SCOUT, id, 60, 1)
 
     def __repr__(self):
         return "T"
@@ -102,7 +101,7 @@ class ScoutUnit(GameUnit):
 class KnightUnit(GameUnit):
 
     def __init__(self, x, y, id):
-        super().__init__(x, y, Units.KNIGHT, id, 130, 0.7)
+        super().__init__(x, y, Units.KNIGHT, id, 130, 2)
 
     def __repr__(self):
         return "K"

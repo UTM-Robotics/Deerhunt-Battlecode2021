@@ -58,6 +58,8 @@ class RenderingEngine:
         row_count = 0
         for row in self.map:
             col_count = 0
+            if len(row) == 0:
+                raise Exception("Illegal row found")
             for tile in row:
                 img = pygame.transform.scale(
                     self.factory.get_tile_image(tile), (self.tile_size, self.tile_size)

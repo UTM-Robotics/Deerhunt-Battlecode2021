@@ -156,13 +156,11 @@ class GameEngine:
             bottom = deepcopy(top[:-1])
             bottom.reverse()
             gamemap = top+bottom
-            self.renderEngine = RenderingEngine(self.renderFactory, gamemap)
+            self.renderEngine = RenderingEngine(self.renderFactory, self.map)
             for state in states:
                 current_units = state["all_units"]
-                print("previous_units", current_units)
                 for key, unit in current_units.items():
                     current_units[key] = self.gameFactory.deserialize_unit(unit)
-                print("current_units:", current_units)
                 current_misc = state["misc"]
                 self.renderEngine.update(gamemap, current_units, current_misc)
                 self.renderEngine.draw()

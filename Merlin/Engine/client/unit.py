@@ -18,19 +18,6 @@ class Unit:
         """
         return self.x, self.y
 
-    def direction_to(self, pos):
-        """
-        Returns a required direction from a unit to <pos>.
-        """
-        if self.y < pos[1]:
-            return 'DOWN'
-        elif self.y > pos[1]:
-            return 'UP'
-        elif self.x > pos[0]:
-            return 'LEFT'
-        elif self.x < pos[0]:
-            return 'RIGHT'
-
     def nearby_enemies_by_distance(self, enemy_units):
         """
         Returns a sorted list of ids and their distances (in a tuple).
