@@ -24,7 +24,7 @@ In this year's game, play as a wizard while at war with another wizard. In this 
 This game is built with [Python](https://www.python.org/) and [Pygame](https://www.pygame.org/news)
 
 ### Requirements:
-- Python3
+- Python 3.9
 - pygame 2.1.0
 - Bash Shell for automated testing
 - CMD or bash for manual testing
