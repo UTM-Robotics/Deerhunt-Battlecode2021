@@ -184,6 +184,9 @@ class MerlinGridGame(GridGame):
                     return False
                 if not self.has_unit(targetX, targetY):
                     return False
+                target_unit = self.get_unit(targetX, targetY)
+                if not str(target_unit.id) in enemy_units:
+                    return False
                 if can_reach(unit.x,unit.y, targetX, targetY, unit.unitType):
                     moved_units.add(unit.id)
                     return True
@@ -368,9 +371,7 @@ class MerlinGridGame(GridGame):
         #Checks if any units are mining, if they are increment the status and add resources if they complete
         for unit in self.all_units.values():
             player_name = self.get_unit_player_name(unit)
-            print(player_name, ":", unit.id, unit.unitType)
-            #if unit.unitType == Units.WORKER:
-                #print(unit.__dict__)
+
             if isinstance(unit, WorkerUnit) and unit.is_mining():
                 #print("Unit mining:", unit)
                 unit.mining_status -= 1
