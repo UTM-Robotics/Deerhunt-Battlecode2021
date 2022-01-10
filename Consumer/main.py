@@ -13,6 +13,7 @@ class Consumer:
         self.save_path = os.getenv('SAVE_PATH')
         self.token = os.getenv('TOKEN')
         self.event_id = os.getenv('EVENT_ID')
+        self.gameController= MerlinGameController()
     def run(self):
         '''run constantly checks to see if there are new submissions, if there is run the match and update the leaderboard'''
         while True:
@@ -24,7 +25,7 @@ class Consumer:
                     teams = self.get_teams(match)
                     for team in range(len(teams)):
                         self.download_submission(teams[team])
-                    result_dict, files = MerlinGameController.run_game()
+                    result_dict, files = self.gameController.run_game()
                     self.post_match(result_dict, files)
                 except Exception as e:
                     print(e)
@@ -58,7 +59,7 @@ class Consumer:
 
     def zip_file(self, filepath):
         '''
-        Zips the file and returns the filepath the the zip file.
+        Zips the file and returns the filepath with the zip file.
         If crash, just crash and deal with consequences normally?
         '''
         pass
