@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from time import sleep
 import requests
-
+from gameController import MerlinGameController
 load_dotenv()
 
 class Consumer:
@@ -24,7 +24,7 @@ class Consumer:
                     teams = self.get_teams(match)
                     for team in range(len(teams)):
                         self.download_submission(teams[team])
-                    result_dict, files = GameController.run_game()
+                    result_dict, files = MerlinGameController.run_game()
                     self.post_match(result_dict, files)
                 except Exception as e:
                     print(e)
@@ -44,13 +44,25 @@ class Consumer:
             return None
 
     def download_submission(self, team):
+        local_filename = team
+        # NOTE the stream=True parameter below
+        with requests.get(self.api_url + "/submissions", params={"team":team}, stream=True) as r:
+            r.raise_for_status()
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192): 
+                    # If you have chunk encoded response uncomment if
+                    # and set chunk_size parameter to None.
+                    #if chunk: 
+                    f.write(chunk)
+        return local_filename
 
+    def zip_file(self, filepath):
+        '''
+        Zips the file and returns the filepath the the zip file.
+        If crash, just crash and deal with consequences normally?
+        '''
+        pass
 
-    def zip_file(self, file):
-        '''
-        Zips the file and returns the filepath the the zip file. if crash, just crash and deal with consequences normally?
-        '''
-        
     def post_match(self, winner, loser, file_path) -> str:
         f = open(file_path)
         data = {}

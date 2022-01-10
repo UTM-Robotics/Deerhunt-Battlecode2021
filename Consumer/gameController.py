@@ -2,6 +2,13 @@ from docker.types import Mount
 import docker
 import uuid
 import os
+class GameController():
+    def clean_previous(self):
+        raise NotImplementedError
+    def inject_zipped(self, teams):
+        raise NotImplementedError
+    def run_game(self):
+        raise NotImplementedError
 
 client = docker.from_env()
 
