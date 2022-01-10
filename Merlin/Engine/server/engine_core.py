@@ -137,6 +137,7 @@ class GameEngine:
                 self.renderEngine = RenderingEngine(self.renderFactory, self.map)
             self.map.print_map()
             winner = self.__runGameLoop(self.map)
+            print(winner)
             if self.replaysavepath:
                 with open(self.replaysavepath, 'w') as outfile:
                     json.dump(self.log, outfile)
@@ -144,10 +145,10 @@ class GameEngine:
             for connection in self.connections:
                 connection.sock.close()
             self.sock.close()
-            if self.save_outcome and self.replaysavepath:
+            if self.save_outcome:
                 with open(self.save_outcome, 'w') as outfile:
-                    json.dump({"winner:", winner}, self.save_outcome)
-                print("Saved outcome to file:", self.replaysavepath)
+                    json.dump({"winner:": winner}, outfile)
+                print("Saved outcome to file:", self.save_outcome)
         else:
             # Load file as json
             # render

@@ -247,6 +247,9 @@ class MerlinGridGame(GridGame):
             attacked_unit.health -= damage
             if attacked_unit.health <= 0:
                 self.del_unit(attacked_unit.x, attacked_unit.y)
+                print(attacked_unit.id)
+                print(player_state)
+                print(opponent_state)
                 del opponent_state[str(attacked_unit.id)]
         elif isinstance(v, UpgradeMove):
             self.resources[player_name] -= UPGRADE_COSTS[unit.unitType][unit.level]
@@ -368,9 +371,7 @@ class MerlinGridGame(GridGame):
         #Checks if any units are mining, if they are increment the status and add resources if they complete
         for unit in self.all_units.values():
             player_name = self.get_unit_player_name(unit)
-            print(player_name, ":", unit.id, unit.unitType)
-            #if unit.unitType == Units.WORKER:
-                #print(unit.__dict__)
+
             if isinstance(unit, WorkerUnit) and unit.is_mining():
                 #print("Unit mining:", unit)
                 unit.mining_status -= 1
