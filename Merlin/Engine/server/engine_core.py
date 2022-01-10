@@ -114,17 +114,18 @@ class GameEngine:
         #Retrieves the port and verbose flag from arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('port', type=int, help='The port to listen on')
-        parser.add_argument('--replayloadpath', type=str, help='If selected, outputs the game state to a file.', nargs='?', const=None)
-        parser.add_argument('--replaysavepath', type=str, help='The port to listen on', nargs='?', const=None)
+        parser.add_argument('--replayloadpath', type=str, help='If selected, reads the game state from a file.', nargs='?', const=None)
+        parser.add_argument('--replaysavepath', type=str, help='If added, saves the output of the game state to a file', nargs='?', const=None)
         parser.add_argument('--verbose', help='Should display the game turn by turn', action='store_true')
         parser.add_argument('--render', help='Should render the game\'s images turn by turn', action='store_true')
+        parser.add_argument('--saveoutcome', type=str, help='If added, saves the game outcome (winner,loser) to a json file.', nargs='?', const=None)
 
         args = parser.parse_args()
         self.verbose = args.verbose
         self.does_render = args.render
         self.load_path = args.replayloadpath
         self.replaysavepath = args.replaysavepath
-        
+        self.save_outcome = args.saveoutcome
         if not self.load_path:
             self.__loadMap()
             if self.replaysavepath:
@@ -135,7 +136,8 @@ class GameEngine:
             if self.does_render:
                 self.renderEngine = RenderingEngine(self.renderFactory, self.map)
             self.map.print_map()
-            self.__runGameLoop(self.map)
+            winner = self.__runGameLoop(self.map)
+            print(winner)
             if self.replaysavepath:
                 with open(self.replaysavepath, 'w') as outfile:
                     json.dump(self.log, outfile)
@@ -143,6 +145,10 @@ class GameEngine:
             for connection in self.connections:
                 connection.sock.close()
             self.sock.close()
+            if self.save_outcome:
+                with open(self.save_outcome, 'w') as outfile:
+                    json.dump({"winner:": winner}, outfile)
+                print("Saved outcome to file:", self.save_outcome)
         else:
             # Load file as json
             # render
