@@ -3,6 +3,7 @@ import uuid
 import os
 import random
 import string
+import json
 import shutil
 from zipfile import ZipFile, BadZipFile
 
@@ -22,7 +23,7 @@ class MerlinGameController(GameController):
         self.host_volume = '/tmp/Merlin'
 
         os.chdir('../Merlin/client')
-        self.client = os.getcwd()
+        self.client1 = os.getcwd()
         if not os.path.isdir('../client2'):
             shutil.copytree('.', '../client2')
         os.chdir('../client2')
@@ -31,6 +32,7 @@ class MerlinGameController(GameController):
             shutil.copytree('.', '../../Consumer/backupclient')
         os.chdir('../../Consumer/backupclient')
         self.backupclient = os.getcwd()
+        os.chdir('..')
 
         self.client = docker.from_env()
 
@@ -46,7 +48,7 @@ class MerlinGameController(GameController):
     def inject_zipped(self):
         try:
             with ZipFile(f'{self.location}{self.teams[0]}.zip', 'r') as zip_file:
-                zip_file.extractall(self.client)
+                zip_file.extractall(self.client1)
             with ZipFile(f'{self.location}{self.teams[1]}.zip', 'r') as zip_file:
                 zip_file.extractall(self.client2)
         except BadZipFile:
@@ -55,7 +57,6 @@ class MerlinGameController(GameController):
 
     def run_game(self, teams):
         self.teams = teams
-        print(teams)
         container_tag = uuid.uuid4().hex
         self.inject_zipped()
         self.client.images.build(path="../", tag=container_tag, rm=True)
@@ -64,5 +65,15 @@ class MerlinGameController(GameController):
         image = self.client.images.get(container_tag)
         self.client.images.remove(image=image.id)
         if os.path.isfile(f'{self.host_volume}/log.json') and os.path.isfile(f'{self.host_volume}/result.json'):
-            return True
-        return False
+            if self.last_timestamp == None:
+                self.last_timestamp = os.path.getmtime(f'{self.host_volume}/result.json')
+            else:
+                if self.last_timestamp == os.path.getmtime(f'{self.host_volume}/result.json'):
+                    return (False, False, False)
+            with open(f'{self.host_volume}/result.json') as f:
+                result = json.loads(f.read())
+                if result['winner'] == 'p1':
+                    return (teams[0], teams[1], f'{self.host_volume}/log.json')
+                elif result['winner'] == 'p2':
+                    return (teams[1], teams[0], f'{self.host_volume}/log.json')
+        return (False, False, False)

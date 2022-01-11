@@ -23,15 +23,15 @@ class Consumer:
             #Get the next match and run the match if there is one (by order of modified)
             match = None
             match = self.get_match()
+            self.match_id = match['']
             if match is not None:
                 try:
-                    teams = self.get_teams(match)
+                    teams = self.get_teams(match[0])
                     for team in teams:
                         self.download_submission(team)
-                    result = self.gameController.run_game(teams)
-                    if result:
-                        pass
-                        # self.post_match(result_dict)
+                    winner, loser, log_path = self.gameController.run_game(teams)
+                    if winner:
+                        self.post_match(winner, loser, log_path)
                 except Exception as e:
                     print(e)
                     print("Game result could not be generated, continueing.")
@@ -52,7 +52,7 @@ class Consumer:
     def download_submission(self, team):
         local_filename = f'{self.save_path}{team}.zip'
         # NOTE the stream=True parameter below
-        with requests.get(f'{self.api_url}/api/consumer/downloads', params={"team_name":team,"event_name":self.event_name}, stream=True) as r:
+        with requests.get(f'http://{self.api_url}/api/consumer/downloads', params={"token":self.token,"team_id":team,"event_name":self.event_name}, stream=True) as r:
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content():
                     f.write(chunk)
@@ -72,7 +72,7 @@ class Consumer:
         self.gameController.clean_previous()
 
     def get_teams(self, match_object):
-        teams = match_object["teams"]
+        teams = [i['$oid'] for i in match_object["teams"]]
         return teams
 
 if __name__ == "__main__":

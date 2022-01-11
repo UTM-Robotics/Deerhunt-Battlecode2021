@@ -147,7 +147,7 @@ class GameEngine:
             self.sock.close()
             if self.save_outcome:
                 with open(self.save_outcome, 'w') as outfile:
-                    json.dump({"winner:": winner}, outfile)
+                    json.dump({"winner": winner}, outfile)
                 print("Saved outcome to file:", self.save_outcome)
         else:
             # Load file as json
