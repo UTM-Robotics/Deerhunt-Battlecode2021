@@ -3,3 +3,6 @@ lib
 pyvenv.cfg
 venv
 __pycache__
+.env
+backupclient/
+client2/

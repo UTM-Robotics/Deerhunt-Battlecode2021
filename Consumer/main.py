@@ -24,20 +24,22 @@ class Consumer:
             #Get the next match and run the match if there is one (by order of modified)
             match = None
             match = self.get_match()
-            self.match_id = match['']
             if match is not None:
                 try:
+                    self.match_id = match[0]['_id']
                     teams = self.get_teams(match[0])
+                    print(teams)
                     for team in teams:
                         self.download_submission(team)
                     winner, loser, log_path = self.gameController.run_game(teams)
                     if winner:
+                        print(winner)
                         self.post_match(winner, loser, log_path)
                 except Exception as e:
                     print(e)
                     print("Game result could not be generated, continueing.")
             else:
-                sleep(15)
+                sleep(5)
 
     def get_match(self):
         try:
@@ -59,17 +61,21 @@ class Consumer:
                     f.write(chunk)
         return local_filename
 
-    def zip_file(self, frompath, topath):
+    def zip_file(self, path):
         '''
         Zips the file and returns the filepath with the zip file.
         If crash, just crash and deal with consequences normally?
         '''
-        shutil.make_archive(frompath, 'zip', topath, 'foldertozip')
+        shutil.make_archive('merlinresult', 'zip', path)
+
 
     def post_match(self, winner, loser, file_path) -> str:
-        f = open(file_path)
-        data = {}
-        result = requests.post(f'{self.api_url}/requests', params={"token":self.token, "event_id": self.event_id})
+        self.zip_file(file_path)
+        replayfile={'file': open(f'{os.getcwd()}/merlinresult.zip','rb')}
+        print('here')
+        result = requests.post(f'http://{self.api_url}/api/match', params={"token":self.token, "event_id": self.event_id,
+                                                                   'winner_id': winner, 'loser_id': loser},
+                                                            files=replayfile)
         self.gameController.clean_previous()
 
     def get_teams(self, match_object):

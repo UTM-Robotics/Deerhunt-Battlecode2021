@@ -35,13 +35,15 @@ class MerlinGameController(GameController):
         os.chdir('..')
 
         self.client = docker.from_env()
+        self.last_timestamp = None
 
-    def clean_previous(self, teams):
-        shutil.rmtree(self.client)
+    def clean_previous(self):
+        shutil.rmtree(self.client1)
         shutil.rmtree(self.client2)
-        os.remove(f'{self.location}{teams[0]}.zip')
-        os.remove(f'{self.location}{teams[1]}.zip')
-        shutil.copytree(self.backupclient, self.client)
+        os.remove('merlinresult.zip')
+        os.remove(f'{self.location}{self.teams[0]}.zip')
+        os.remove(f'{self.location}{self.teams[1]}.zip')
+        shutil.copytree(self.backupclient, self.client1)
         shutil.copytree(self.backupclient, self.client2)
 
 
@@ -65,15 +67,10 @@ class MerlinGameController(GameController):
         image = self.client.images.get(container_tag)
         self.client.images.remove(image=image.id)
         if os.path.isfile(f'{self.host_volume}/log.json') and os.path.isfile(f'{self.host_volume}/result.json'):
-            if self.last_timestamp == None:
-                self.last_timestamp = os.path.getmtime(f'{self.host_volume}/result.json')
-            else:
-                if self.last_timestamp == os.path.getmtime(f'{self.host_volume}/result.json'):
-                    return (False, False, False)
             with open(f'{self.host_volume}/result.json') as f:
                 result = json.loads(f.read())
                 if result['winner'] == 'p1':
-                    return (teams[0], teams[1], f'{self.host_volume}/log.json')
+                    return (teams[0], teams[1], f'{self.host_volume}')
                 elif result['winner'] == 'p2':
-                    return (teams[1], teams[0], f'{self.host_volume}/log.json')
+                    return (teams[1], teams[0], f'{self.host_volume}')
         return (False, False, False)
