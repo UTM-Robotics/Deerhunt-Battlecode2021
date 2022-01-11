@@ -10,10 +10,12 @@ class Consumer:
     '''Consumer retrieves matches from the submission queue, runs them and updates the leaderboard '''
     def __init__(self):
         self.api_url = os.getenv('API_URL')
-        self.save_path = os.getenv('SAVE_PATH')
+        self.save_path = os.getenv('SAVE_PATH') # must have trailing slash like: /tmp/saved/
         self.token = os.getenv('TOKEN')
         self.event_id = os.getenv('EVENT_ID')
-        self.gameController= MerlinGameController()
+        self.gameController= MerlinGameController(self.save_path)
+
+
     def run(self):
         '''run constantly checks to see if there are new submissions, if there is run the match and update the leaderboard'''
         while True:
@@ -23,10 +25,12 @@ class Consumer:
             if match is not None:
                 try:
                     teams = self.get_teams(match)
-                    for team in range(len(teams)):
-                        self.download_submission(teams[team])
-                    result_dict, files = self.gameController.run_game()
-                    self.post_match(result_dict, files)
+                    for team in teams:
+                        self.download_submission(team)
+                    result = self.gameController.run_game(teams)
+                    if result:
+                        pass
+                        # self.post_match(result_dict)
                 except Exception as e:
                     print(e)
                     print("Game result could not be generated, continueing.")
@@ -35,7 +39,7 @@ class Consumer:
 
     def get_match(self):
         try:
-            result = requests.get(url=self.api_url +"/requests", params={"token":self.token, "event_id": self.event_id})
+            result = requests.get(f'http://{self.api_url}/api/requests', params={"token":self.token, "event_id": self.event_id})
             if result.status_code == 200:
                 return result.json()
             else:
@@ -45,15 +49,11 @@ class Consumer:
             return None
 
     def download_submission(self, team):
-        local_filename = team
+        local_filename = f'{self.save_path}{team}.zip'
         # NOTE the stream=True parameter below
-        with requests.get(self.api_url + "/submissions", params={"team":team}, stream=True) as r:
-            r.raise_for_status()
+        with requests.get(f'{self.api_url}/submissions', params={"team":team}, stream=True) as r:
             with open(local_filename, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192): 
-                    # If you have chunk encoded response uncomment if
-                    # and set chunk_size parameter to None.
-                    #if chunk: 
+                for chunk in r.iter_content():
                     f.write(chunk)
         return local_filename
 
@@ -67,11 +67,13 @@ class Consumer:
     def post_match(self, winner, loser, file_path) -> str:
         f = open(file_path)
         data = {}
-        result = requests.post(url=self.api_url +"/requests", params={"token":self.token, "event_id": self.event_id})
+        result = requests.post(f'{self.api_url}/requests', params={"token":self.token, "event_id": self.event_id})
+        self.gameController.clean_previous()
 
     def get_teams(self, match_object):
         teams = match_object["teams"]
         return teams
+
 if __name__ == "__main__":
     consumer = Consumer()
     consumer.run()
