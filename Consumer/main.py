@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from time import sleep
 import requests
 from gameController import MerlinGameController
+import shutil
 load_dotenv()
 
 class Consumer:
@@ -58,12 +59,12 @@ class Consumer:
                     f.write(chunk)
         return local_filename
 
-    def zip_file(self, filepath):
+    def zip_file(self, frompath, topath):
         '''
         Zips the file and returns the filepath with the zip file.
         If crash, just crash and deal with consequences normally?
         '''
-        pass
+        shutil.make_archive(frompath, 'zip', topath, 'foldertozip')
 
     def post_match(self, winner, loser, file_path) -> str:
         f = open(file_path)
