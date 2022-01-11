@@ -13,6 +13,7 @@ class Consumer:
         self.save_path = os.getenv('SAVE_PATH') # must have trailing slash like: /tmp/saved/
         self.token = os.getenv('TOKEN')
         self.event_id = os.getenv('EVENT_ID')
+        self.event_name = os.getenv('EVENT_NAME')
         self.gameController= MerlinGameController(self.save_path)
 
 
@@ -51,7 +52,7 @@ class Consumer:
     def download_submission(self, team):
         local_filename = f'{self.save_path}{team}.zip'
         # NOTE the stream=True parameter below
-        with requests.get(f'{self.api_url}/submissions', params={"team":team}, stream=True) as r:
+        with requests.get(f'{self.api_url}/api/consumer/downloads', params={"team_name":team,"event_name":self.event_name}, stream=True) as r:
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content():
                     f.write(chunk)
