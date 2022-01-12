@@ -32,9 +32,14 @@ class Consumer:
                     for team in teams:
                         self.download_submission(team)
                     winner, loser, log_path = self.gameController.run_game(teams)
-                    if winner:
-                        print(winner)
-                        self.post_match(winner, loser, log_path)
+                    if log_path == None:
+                        self.post_match_default(winner, loser)
+                    else:
+                        if winner:
+                            print(winner)
+                            self.post_match(winner, loser, log_path)
+                        else:
+                            print("Game failed to be generated, zip succeeded.")
                 except Exception as e:
                     print(e)
                     print("Game result could not be generated, continueing.")
@@ -78,6 +83,10 @@ class Consumer:
                                                             files=replayfile)
         self.gameController.clean_previous()
 
+    def post_match_default(self, winner, loser) -> str:
+        result = requests.post(f'http://{self.api_url}/api/match', params={"token":self.token, "event_id": self.event_id,
+                                                                   'winner_id': winner, 'loser_id': loser})
+        self.gameController.clean_previous()
     def get_teams(self, match_object):
         teams = [i['$oid'] for i in match_object["teams"]]
         return teams

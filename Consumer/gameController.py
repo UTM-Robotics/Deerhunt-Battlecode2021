@@ -36,7 +36,7 @@ class MerlinGameController(GameController):
 
         self.client = docker.from_env()
         self.last_timestamp = None
-
+        self.error = False
     def clean_previous(self):
         shutil.rmtree(self.client1)
         shutil.rmtree(self.client2)
@@ -51,16 +51,22 @@ class MerlinGameController(GameController):
         try:
             with ZipFile(f'{self.location}{self.teams[0]}.zip', 'r') as zip_file:
                 zip_file.extractall(self.client1)
+        except BadZipFile:
+            return (0,1)# winner , loser by default
+        try:
             with ZipFile(f'{self.location}{self.teams[1]}.zip', 'r') as zip_file:
                 zip_file.extractall(self.client2)
         except BadZipFile:
-            return False
-        return True
+            return (1,0) # winner, loser by default
+        return None# success
 
     def run_game(self, teams):
+        self.error = False
         self.teams = teams
         container_tag = uuid.uuid4().hex
-        self.inject_zipped()
+        default = self.inject_zipped()
+        if default:
+            return teams[default[0]] , teams[default[1]], None # default winners, no files to upload since never ran.
         self.client.images.build(path="../", tag=container_tag, rm=True)
         self.client.containers.run(container_tag, detach=False, auto_remove=True, \
             network_mode=None, cpu_count=1, mem_limit='512m', volumes=[f'{self.host_volume}:/deerhunt'])
