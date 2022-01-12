@@ -36,7 +36,7 @@ class MerlinGameController(GameController):
 
         self.client = docker.from_env()
         self.last_timestamp = None
-        self.error = False
+
     def clean_previous(self):
         shutil.rmtree(self.client1)
         shutil.rmtree(self.client2)
@@ -61,7 +61,6 @@ class MerlinGameController(GameController):
         return None# success
 
     def run_game(self, teams):
-        self.error = False
         self.teams = teams
         container_tag = uuid.uuid4().hex
         default = self.inject_zipped()
