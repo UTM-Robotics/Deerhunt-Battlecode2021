@@ -101,8 +101,7 @@ class AttackMove(GameMove):
       '''
       Returns the serialized form of this move
       '''
-      return str({'command': Moves.ATTACK, "unit": self.unit, "target": self.target })
-
+      return str({'command': Moves.ATTACK, "unit": self.unit, "direction": self.direction, "length": self.length})
 
 class UpgradeMove(GameMove):
   def __init__(self, unit):
