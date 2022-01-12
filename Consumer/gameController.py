@@ -33,6 +33,8 @@ class MerlinGameController(GameController):
         os.chdir('../../Consumer/backupclient')
         self.backupclient = os.getcwd()
         os.chdir('..')
+        if not os.path.isdir(self.location):
+            os.mkdir(self.location)
 
         self.client = docker.from_env()
         self.last_timestamp = None
@@ -41,6 +43,7 @@ class MerlinGameController(GameController):
         shutil.rmtree(self.client1)
         shutil.rmtree(self.client2)
         os.remove('merlinresult.zip')
+        os.listdir(f'{self.location}')
         os.remove(f'{self.location}{self.teams[0]}.zip')
         os.remove(f'{self.location}{self.teams[1]}.zip')
         shutil.copytree(self.backupclient, self.client1)
