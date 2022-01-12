@@ -71,7 +71,7 @@ class MerlinGameController(GameController):
         self.client.containers.run(container_tag, detach=False, auto_remove=True, \
             network_mode=None, cpu_count=1, mem_limit='512m', volumes=[f'{self.host_volume}:/deerhunt'])
         image = self.client.images.get(container_tag)
-        self.client.images.remove(image=image.id)
+        self.client.images.remove(image=image.id, force=True)
         if os.path.isfile(f'{self.host_volume}/log.json') and os.path.isfile(f'{self.host_volume}/result.json'):
             with open(f'{self.host_volume}/result.json') as f:
                 result = json.loads(f.read())
