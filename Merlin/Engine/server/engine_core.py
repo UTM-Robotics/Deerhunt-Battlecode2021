@@ -132,7 +132,17 @@ class GameEngine:
                 self.log = {"map": self.map.serialize(), "state":[]}
             self.__launchServer(args.port)
             for player in range(self.NUMPLAYERS):
-                self.__connectNextPlayer()
+                if self.save_outcome:
+                    try:
+                        self.__connectNextPlayer()
+                    except Exception as e:
+                        if player == 0:
+                            self.__savewinner("p2")
+                        else:
+                            self.__savewinner("p1")
+                        print(e)
+                else:
+                    self.__connectNextPlayer()
             if self.does_render:
                 self.renderEngine = RenderingEngine(self.renderFactory, self.map)
             self.map.print_map()
@@ -146,9 +156,7 @@ class GameEngine:
                 connection.sock.close()
             self.sock.close()
             if self.save_outcome:
-                with open(self.save_outcome, 'w') as outfile:
-                    json.dump({"winner": winner}, outfile)
-                print("Saved outcome to file:", self.save_outcome)
+                self.__savewinner(winner)
         else:
             # Load file as json
             # render
@@ -172,3 +180,7 @@ class GameEngine:
                 self.renderEngine.draw()
                 print("Press enter on the rendered window to continue. Press q to exit")
                 self.renderEngine.wait() # consumes for the world to see.
+    def __savewinner(self, winner):
+        with open(self.save_outcome, 'w') as outfile:
+            json.dump({"winner": winner}, outfile)
+        print("Saved outcome to file:", self.save_outcome)
