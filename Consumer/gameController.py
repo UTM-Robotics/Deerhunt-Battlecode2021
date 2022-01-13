@@ -75,6 +75,9 @@ class MerlinGameController(GameController):
 
 
     def inject_zipped(self):
+        print("printing clients:")
+        print(self.client1)
+        print(self.client2)
         try:
             with ZipFile(f'{self.location}{self.teams[0]}.zip', 'r') as zip_file:
                 zip_file.extractall(self.client1)
@@ -82,6 +85,7 @@ class MerlinGameController(GameController):
             return (0,1)# winner , loser by default
         try:
             with ZipFile(f'{self.location}{self.teams[1]}.zip', 'r') as zip_file:
+                print("Success printing client1")
                 zip_file.extractall(self.client2)
         except BadZipFile:
             return (1,0) # winner, loser by default
@@ -93,6 +97,7 @@ class MerlinGameController(GameController):
         default = self.inject_zipped()
         if default:
             return teams[default[0]] , teams[default[1]], None # default winners, no files to upload since never ran.
+        print("Running game between:", str(teams))
         self.client.images.build(path="../", tag=container_tag, rm=True)
         self.client.containers.run(container_tag, detach=False, auto_remove=True, \
             network_mode=None, cpu_count=1, mem_limit='512m', volumes=[f'{self.host_volume}:/deerhunt'])
@@ -101,8 +106,9 @@ class MerlinGameController(GameController):
         if os.path.isfile(f'{self.host_volume}/log.json') and os.path.isfile(f'{self.host_volume}/result.json'):
             with open(f'{self.host_volume}/result.json') as f:
                 result = json.loads(f.read())
+                print(result)
                 if result['winner'] == 'p1':
                     return (teams[0], teams[1], f'{self.host_volume}')
-                elif result['winner'] == 'p2':
+                else:
                     return (teams[1], teams[0], f'{self.host_volume}')
         return (False, False, False)
