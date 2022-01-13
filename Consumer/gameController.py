@@ -40,14 +40,38 @@ class MerlinGameController(GameController):
         self.last_timestamp = None
 
     def clean_previous(self):
-        shutil.rmtree(self.client1)
-        shutil.rmtree(self.client2)
-        os.remove('merlinresult.zip')
-        os.listdir(f'{self.location}')
-        os.remove(f'{self.location}{self.teams[0]}.zip')
-        os.remove(f'{self.location}{self.teams[1]}.zip')
-        shutil.copytree(self.backupclient, self.client1)
-        shutil.copytree(self.backupclient, self.client2)
+        print("Cleaning previous run")
+        try:
+            shutil.rmtree(self.client1)
+        except Exception as e:
+            print(e)
+        try:
+            shutil.rmtree(self.client2)
+        except Exception as e:
+            print(e)
+        
+        try:
+            os.remove('merlinresult.zip')
+        except Exception as e:
+            print(e)
+        try:
+            os.remove(f'{self.location}{self.teams[0]}.zip')
+        except Exception as e:
+            print(e)
+        try:
+            os.remove(f'{self.location}{self.teams[1]}.zip')
+        except Exception as e:
+            print(e)
+
+        try:
+            shutil.copytree(self.backupclient, self.client1)
+        except Exception as e:
+            print(e)
+        try:
+            shutil.copytree(self.backupclient, self.client2)
+        except Exception as e:
+            print(e)
+        print("cleanup complete")
 
 
     def inject_zipped(self):
