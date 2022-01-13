@@ -82,19 +82,20 @@ class MerlinGameController(GameController):
             with ZipFile(f'{self.location}{self.teams[0]}.zip', 'r') as zip_file:
                 zip_file.extractall(self.client1)
         except BadZipFile:
-            return (0,1)# winner , loser by default
+            return (1,0)# winner , loser by default
         try:
             with ZipFile(f'{self.location}{self.teams[1]}.zip', 'r') as zip_file:
                 print("Success printing client1")
                 zip_file.extractall(self.client2)
         except BadZipFile:
-            return (1,0) # winner, loser by default
+            return (0,1) # winner, loser by default
         return None# success
 
     def run_game(self, teams):
         self.teams = teams
         container_tag = uuid.uuid4().hex
         default = self.inject_zipped()
+        print("")
         if default:
             return teams[default[0]] , teams[default[1]], None # default winners, no files to upload since never ran.
         print("Running game between:", str(teams))
