@@ -3,7 +3,8 @@
 # For docker
 python runServer.py --replaysavepath /deerhunt/log.json --saveoutcome /deerhunt/result.json 8000 & 
 sleep 0.5
-python runClient.py 172.17.0.2 8000 & 
+python runClient.py 172.17.0.2 8000 &
+sleep 0.5
 python runClient2.py 172.17.0.2 8000 &
 
 # uncomment below to run on dev machine.
