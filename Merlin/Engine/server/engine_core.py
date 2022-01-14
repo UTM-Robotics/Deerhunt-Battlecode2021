@@ -29,6 +29,7 @@ class GameEngine:
         self.addresses = []
         self.verbose = False
         self.render = False
+        self.serverlog = ''
 
     def __launchServer(self, port, timeout=8):
         ''' Launches the server on the desired port, handling OS descrepencies.
@@ -55,6 +56,7 @@ class GameEngine:
 
     def __connectNextPlayer(self):
         
+        player = self.totalPlayers + 1
         print(f'Waiting for client {player}...')
         conn, addr = self.sock.accept()
         self.connections.append(ClientConnection(conn, f'p{player}', verbose=self.verbose, moveFactory=self.moveFactory))
@@ -62,7 +64,6 @@ class GameEngine:
         if not self.verbose:
             conn.settimeout(10)
         print(f'Connected to client {player} at addr')
-        player = self.totalPlayers + 1
         self.totalPlayers += 1
 
     def __loadMap(self, file_name=None):
