@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # For docker
-python runServer.py --replaysavepath /deerhunt/log.json --saveoutcome /deerhunt/result.json 8000 >> /deerhunt/serverlog.txt & 
+python runServer.py --replaysavepath /deerhunt/log.json --saveoutcome /deerhunt/result.json 8000 > /deerhunt/serverlog.txt & 
 sleep 0.5
-python runClient.py 172.17.0.2 8000 >> /deerhunt/p1log.txt &
+python runClient.py 172.17.0.2 8000 > /deerhunt/p1log.txt &
 sleep 0.5
-python runClient2.py 172.17.0.2 8000  >> /deerhunt/p2log.txt &
+python runClient2.py 172.17.0.2 8000  > /deerhunt/p2log.txt &
 
 # uncomment below to run on dev machine.
 # python3 runServer.py 8000 & 
