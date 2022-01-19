@@ -27,12 +27,12 @@ class GridPlayer:
         else:
             # miner moves
             miner = my_workers[1]
-            loc_nearest_gold = game_map.closest_tile_of_type(miner, Tiles.GOLD)
+            loc_nearest_copper = game_map.closest_tile_of_type(miner, Tiles.COPPER)
             miner_pos = miner.position() # returns x, y. Otherwise known as col, row
             start = miner_pos
-            dir_nearest_gold = game_map.bfs(start,(loc_nearest_gold[0],loc_nearest_gold[1]))
-            if dir_nearest_gold:
-                moves.append(createDirectionMove(miner.id, direction_to(miner, dir_nearest_gold[1:][0]), 1))
+            dir_nearest_copper = game_map.bfs(start,(loc_nearest_copper[0],loc_nearest_copper[1]))
+            if dir_nearest_copper:
+                moves.append(createDirectionMove(miner.id, direction_to(miner, dir_nearest_copper[1:][0]), 1))
             else:
                 moves.append(createMineMove(miner.id))
             # Spawner creates units
@@ -65,15 +65,18 @@ class GridPlayer:
 
         if len(my_knights) >= 1:
             hunter = my_knights[0]
-            if len(enemy_units.get_all_unit_ids()) >= 1:
-                prey_pos = enemy_units.get_unit(enemy_units.get_all_unit_ids()[0]).position()
-                prey_path = game_map.bfs(hunter.position(),prey_pos)
-                prey_dir = direction_to(hunter, prey_path[1]) # Direction for the next best move
-                if len(prey_path) >=2: # Check if adjacent. Can only capture in a direction.
-                    moves.append(createAttackMove(hunter.id, prey_dir, 1))
-                moves.append(createDirectionMove(hunter.id, prey_dir, 1))
+            if hunter.level < 3:
+                moves.append(createUpgradeMove(hunter.id))
             else:
-                moves.append(createDirectionMove(hunter.id, get_random_direction(), 2))
+                if len(enemy_units.get_all_unit_ids()) >= 1:
+                    prey_pos = enemy_units.get_unit(enemy_units.get_all_unit_ids()[0]).position()
+                    prey_path = game_map.bfs(hunter.position(),prey_pos)
+                    prey_dir = direction_to(hunter, prey_path[1]) # Direction for the next best move
+                    if len(prey_path) >=2: # Check if adjacent. Can only capture in a direction.
+                        moves.append(createAttackMove(hunter.id, prey_dir, 1))
+                    moves.append(createDirectionMove(hunter.id, prey_dir, 1))
+                else:
+                    moves.append(createDirectionMove(hunter.id, get_random_direction(), 2))
         if len(my_archers) >= 1:
             hunter = my_archers[0]
             if len(enemy_units.get_all_unit_ids()) >= 1:

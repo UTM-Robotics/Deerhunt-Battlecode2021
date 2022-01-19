@@ -1,17 +1,17 @@
 import json
-from os import X_OK
-from game.constants import ATTACK_DAMAGE, BUY_TIME, MINING_TIME, UPGRADE_COSTS
-from game.constants import Tiles
-from server import *
 from copy import deepcopy
 
+
+from server import *
 from Engine.server.grid_game import GridGame, GridGameFactory
 from Engine.server.grid_game import ClientConnection
 from Engine.server.maps import Map
 from .unit import *
 from .tile import BaseTile
 from .move import *
-from game.constants import Units, Direction, MAX_ATTACK_RANGE, MINING_REWARDS, TURNS_PER_PLAYER, MAX_MOVEMENT_SPEED, MAX_LEVEL
+
+from game.constants import Tiles
+from game.constants import Units, Direction, MAX_ATTACK_RANGE, MINING_REWARDS, TURNS_PER_PLAYER, MAX_MOVEMENT_SPEED, MAX_LEVEL , ATTACK_DAMAGE, BUY_TIME, MINING_TIME, UPGRADE_COSTS, MINING_LEVEL_MINIMUM
 
 def direction_to_coord(x,y, direction, magnitude = 1):
     if direction == Direction.DOWN:
@@ -129,8 +129,11 @@ class MerlinGridGame(GridGame):
                 if unit.is_mining():
                     print('ERROR: {} cannot act while mining'.format(k))
                     return False
-
-                if repr(self.grid[unit.y][unit.x]) in [Tiles.GOLD, Tiles.COPPER, Tiles.SILVER]:
+                tiletype = repr(self.grid[unit.y][unit.x])
+                if not repr(self.grid[unit.y][unit.x]) in [Tiles.GOLD, Tiles.COPPER, Tiles.SILVER]:
+                    print('ERROR: {} cannot mine {} when level {}'.format(k, tiletype, str(unit.level)))
+                    return False
+                if unit.level >= MINING_LEVEL_MINIMUM[tiletype]:
                     moved_units.add(unit.id)
                     return True
                 else:
@@ -195,7 +198,7 @@ class MerlinGridGame(GridGame):
             elif isinstance(v, UpgradeMove):
                 if unit.level >= MAX_LEVEL:
                     return False
-                unitCost = UPGRADE_COSTS[v.unitType][unit.level + 1]
+                unitCost = UPGRADE_COSTS[unit.unitType][unit.level + 1]
                 if player_resources >= unitCost:
                     moved_units.add(unit.id)
                     return True
